@@ -1,3 +1,7 @@
+'''
+Prompts the user for an integer N and finds all perfect numbers up to N.
+Quadratic complexity, can deal with small values only.
+'''
 import sys
 
 

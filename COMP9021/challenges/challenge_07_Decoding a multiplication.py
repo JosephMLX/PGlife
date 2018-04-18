@@ -1,3 +1,16 @@
+'''
+Decodes all multiplications of the form
+
+                       *  *  *
+                  x       *  *
+                    ----------
+                    *  *  *  *
+                    *  *  *
+                    ----------
+                    *  *  *  *
+
+such that the sum of all digits in all 4 columns is constant.
+'''
 def decoding (mutiple_1, mutiple_2, sum_1, sum_2, result):
     column_1 = mutiple_1%10 + mutiple_2%10 + sum_1%10 + result%10
     column_2 = mutiple_1//10%10 + mutiple_2//10 + sum_1//10%10 + sum_2%10 + result//10%10

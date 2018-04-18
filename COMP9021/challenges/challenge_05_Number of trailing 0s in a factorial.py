@@ -1,3 +1,8 @@
+'''
+Prompts the user to input an integer N at least equal to 10 and computes
+the number of trailing 0's in N! in three different ways.
+'''
+
 import sys
 from math import factorial
 
