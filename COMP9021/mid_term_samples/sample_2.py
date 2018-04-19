@@ -32,10 +32,14 @@ def f(n):
         if n <= 1:
             return 1
         if n > 1:
+            return n * factorial(n - 1)
+        '''
+        if n > 1:
             result = 1
             for i in range(1, n + 1):
                 result *= i
             return result
+        '''
     n_factorial = factorial(n)
     new_n_factorial = n_factorial
     while True:
