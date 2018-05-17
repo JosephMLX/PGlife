@@ -201,10 +201,11 @@ begin
   if (is_valid) = 'f' then
     raise exception 'INVALID ORGID';
   end if;
-  return query select q3_1.unswid, q3_1.student_name, string_agg(q3_1.course_records||', '||q3_1.mark, chr(10))||chr(10) as course_records
+  return query select q3_1.unswid, q3_1.student_name, string_agg(q3_1.course_records||', '||coalesce(cast(mark as text), 'null'), chr(10))||chr(10) as course_records
   from (select *, row_number() over(partition by Q3_1.unswid order by Q3_1.unswid) from q3_1($1,$2,$3)) q3_1
   where row_number between 1 and 5
   group by q3_1.unswid, q3_1.student_name
   order by q3_1.unswid;
 end;
 $$ language plpgsql;
+
