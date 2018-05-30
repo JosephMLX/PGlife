@@ -35,9 +35,28 @@ def good_subsequences(word):
  'bc', 'bca', 'c', 'ca', 'cab', 'cb', 'cba']
     '''
     # Insert your code here
+    good_seq = ['']
+    if not word:
+        return good_seq
+    new_word = word[0]
+    for i in range(1, len(word)):
+        if word[i] != word[i-1]:
+            new_word += word[i]
+    return sorted(list(set(find_sub(new_word))))
 
 # Possibly define another function
-                
+def find_sub(w):
+    if len(set(w)) == 1:
+        return ['', w[0]]
+    sub = find_sub(w[1:])
+    cur_str = []
+    for i in range(len(sub)):
+        if cur_str not in sub and w[0] not in sub[i]:
+            cur_str.append(w[0] + sub[i])        
+    return sub + cur_str
+
+    
+    
 
 if __name__ == '__main__':
     import doctest
