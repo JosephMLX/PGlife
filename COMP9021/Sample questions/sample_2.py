@@ -31,6 +31,10 @@ def f(N):
     banknote_values = [1, 2, 5, 10, 20, 50, 100]
     banknotes = dict.fromkeys(banknote_values, 0)
     # Insert your code here
+    for i in range(6, -1, -1):
+        if N // banknote_values[i]:
+            banknotes[banknote_values[i]] = (N // banknote_values[i])
+            N %= banknote_values[i]
     print('Here are your banknotes:')
     for value in sorted(banknotes):
         if banknotes[value]:

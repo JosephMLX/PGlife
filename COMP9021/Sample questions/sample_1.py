@@ -1,4 +1,4 @@
-
+from itertools import groupby
 def remove_consecutive_duplicates(word):
     '''
     >>> remove_consecutive_duplicates('')
@@ -16,7 +16,8 @@ def remove_consecutive_duplicates(word):
     >>> remove_consecutive_duplicates('aaabbbbbaaacaacdddd')
     'abacacd'
     '''
-    # Insert your code here (the output is returned, not printed out)               
+    # Insert your code here (the output is returned, not printed out)
+    return ''.join(value for value, index in groupby(word))
 
 if __name__ == '__main__':
     import doctest
