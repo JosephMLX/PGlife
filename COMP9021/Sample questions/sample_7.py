@@ -39,9 +39,13 @@ def find_word(filename, word):
     LEMON was not found
     '''
     with open(filename) as file:
-        grid = None
+        grid = []
         # Insert your code here
         # A one liner that sets grid to the appropriate value is enough.
+        for line in file.readlines():
+            line = [e for e in line if e != ' ' and e != '\n']
+            if line:
+                grid.append(line)
         location = find_word_horizontally(grid, word)
         found = False
         if location:
@@ -60,18 +64,36 @@ def find_word(filename, word):
     
     
 def find_word_horizontally(grid, word):
-    pass
     # Replace pass above with your code
-
-
+    for i in range(len(grid)):
+        for j in range(len(grid[0]) - len(word) + 1):
+            if ''.join(grid[i][j:j+len(word)]) == word:
+                return i+1, j+1
 def find_word_vertically(grid, word):
-    pass
     # Replace pass above with your code
+    trans = [[None]*len(grid) for j in range(len(grid[0]))]
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            trans[j][i] = grid[i][j]
+    for i in range(len(trans)):
+        for j in range(len(trans[0]) - len(word) + 1):
+            if ''.join(trans[i][j:j+len(word)]) == word:
+                return j+1, i+1
 
 
 def find_word_diagonally(grid, word):
-    pass
     # Replace pass above with your code
+    wordlist = []
+    for i in range(len(grid)-len(word)+1):
+        for j in range(len(grid[0])-len(word)+1):
+            w = ''
+            for k in range(len(word)):
+                w += grid[i+k][j+k]
+            wordlist.append(w)
+    if word in wordlist:
+        position = wordlist.index(word)
+        return position//(len(grid)-len(word)+1) + 1, position%(len(grid)-len(word)+1) + 1
+    
 
 
 if __name__ == '__main__':
