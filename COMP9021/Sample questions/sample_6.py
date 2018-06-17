@@ -59,8 +59,25 @@ def is_valid_prefix_expression(expression):
     '''
     stack = []
     try:
-        pass
         # Replace pass above with your code
+        l = expression.strip().split()[::-1]
+        operator = {'+': add, '-': sub, '*': mul, '/': truediv}
+        if not l:
+            raise IndexError
+        for e in l:
+            if e not in operator and not int(e):
+                raise ValueError
+        for e in l:
+            if e not in operator:
+                stack.append(e)
+            if e in operator:
+                arg_1 = int(stack.pop())
+                arg_2 = int(stack.pop())
+                stack.append(operator[e](arg_1, arg_2))
+        if len(stack) > 1:
+            raise ListNonEmpty
+        
+        
     # - IndexError is raised in particular when trying to pop from an empty list
     # - ValueError is raised in particular when trying to convert to an int
     #   a string that cannot be converted to an int
@@ -91,6 +108,22 @@ def evaluate_prefix_expression(expression):
     -1
     '''
     # Insert your code here
+    l = expression.strip().split()[::-1]
+    if len(l) == 1:
+        return int(l[0])
+    operator = {'+': add, '-': sub, '*': mul, '/': truediv}
+    stack = []
+    for e in l:
+        if e not in operator:
+            stack.append(e)
+        if e in operator:
+            arg_1 = int(stack.pop())
+            arg_2 = int(stack.pop())
+            stack.append(operator[e](arg_1, arg_2))
+    if '/' in l:
+        return float(stack[0])
+    return stack[0]
+    
                          
 
 if __name__ == '__main__':
