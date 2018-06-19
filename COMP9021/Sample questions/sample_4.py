@@ -28,6 +28,7 @@ Hint to make the solution efficient enough:
 dictionary_file = 'dictionary.txt'
 
 def get_words_and_word_relationships():
+    cnt = 0
     try:
         with open(dictionary_file) as dictionary:
             lexicon = set()
@@ -37,6 +38,11 @@ def get_words_and_word_relationships():
                 lexicon.add(word)
                 for i in range(len(word)):
                     contextual_slots[word[: i], word[i + 1: ]].append(word)
+                if cnt <5 and Test:
+                    print(cnt)
+                    print(word)
+                    print(contextual_slots)
+                    cnt+=1
             closest_words = defaultdict(set)
             for slot in contextual_slots:
                 for i in range(len(contextual_slots[slot])):
@@ -47,6 +53,8 @@ def get_words_and_word_relationships():
     except FileNotFoundError:
         print(f'Could not open {dictionary_file}. Giving up...')
         sys.exit()
+
+Test = False
 
 def is_word_word_ladder(word_1, word_2, candidate_ladder):
     '''
@@ -66,8 +74,25 @@ def is_word_word_ladder(word_1, word_2, candidate_ladder):
     True
     '''
     # Note how get_words_and_word_relationships() is called below.
-    # Insert your code here
+    if not ( word_1 in lexicon and word_2 in lexicon and all([word in lexicon for word in candidate_ladder]) and word_1==candidate_ladder[0] and word_2==candidate_ladder[-1]):
+        return False
+
+    if not all([dif(candidate_ladder[i],candidate_ladder[i-1]) for i in range(1,len(candidate_ladder))]):
+        return False
+    if word_1==word_2 and len(candidate_ladder)==1:
+        return True
+    if  len(candidate_ladder)==2:
+        return True
+    for k in range(2,len(candidate_ladder)):
+        if any([dif(candidate_ladder[i],candidate_ladder[i-k]) for i in range(k,len(candidate_ladder))]):
+            return False
+    return True
     
+#only different in one letter
+def dif(w1,w2):
+    if len(w1)!=len(w2):
+        return False
+    return [w1[i]==w2[i] for i in range(0,len(w1))].count(False) == 1
 
 if __name__ == '__main__':
     # lexicon is a set that records all words in the dictionary.
