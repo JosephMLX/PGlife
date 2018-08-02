@@ -9,8 +9,8 @@ coding notes, labs, quizes
 
 # UNSW 18S2
 
--- COMP9041
--- COMP9032
--- COMP9321
+-- COMP9041<br>
+-- COMP9032<br>
+-- COMP9321<br>
 -- COMP9024
 `
