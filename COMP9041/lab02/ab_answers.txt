@@ -28,7 +28,7 @@ Q2 answer: egrep '^[AB]*$' input.txt | egrep -v 'BB.*AA'
 only the characters A and  B such that
 the number of A's is divisible by 4.
 
-Q3 answer:
+Q3 answer: egrep '^(B*A){4}*B*$' input.txt
 
 
 4) Write a egrep command  that prints the lines in a file named input.txt containing
