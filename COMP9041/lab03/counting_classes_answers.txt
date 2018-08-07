@@ -39,5 +39,6 @@ Q5 answer: cut -f4 classes.txt | cut -c1-6 | sort | uniq -c | sort | tail -1
 6) Challenge: Write a shell pipeline that prints a list of the course codes (only) of COMP courses that
 run 2 or more  classes of the same type starting at the same time on the same day? (e.g. three tut-labs starting Monday at 10:00)
 
-Q6 answer: cut -f4 classes.txt | cut -c1-6 | sort | uniq -c | sort | tail -1
+Q6 answer: egrep 'COMP' classes.txt | cut -c1-9,18-24 | sort | uniq -d | cut -c1-9 | uniq -c | egrep -o 'COMP.*'
+
 
