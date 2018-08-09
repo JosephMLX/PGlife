@@ -6,7 +6,7 @@ L="Large files: "
 
 for file in *
 do
-	lines=`wc -l < $file`
+	lines=`wc -l < "$file"`
 	if test $lines -lt 10
 	then
 		S+="$file "
