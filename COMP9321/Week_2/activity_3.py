@@ -69,4 +69,8 @@ if __name__ == '__main__':
     print("Querying the database")
     df = read_from_mongodb(mongo_host, mongo_port, db_name, collection)
 
+<<<<<<< HEAD
     print_dataframe(df)
+=======
+    print_dataframe(df)
+>>>>>>> b2cffb63ce3ea292dd8d763243dc318ab59e2830

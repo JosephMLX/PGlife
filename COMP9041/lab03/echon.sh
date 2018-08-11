@@ -1,5 +1,10 @@
 #!/bin/sh
 
+<<<<<<< HEAD
+if test 
+
+fi
+=======
 if test $# -ne 2
 then
 	echo "Usage: ./echon.sh <number of lines> <string>"
@@ -23,3 +28,4 @@ then
 else
 	echo "./echon.sh: argument 1 must be a non-negative integer"
 fi
+>>>>>>> dc8ddb4fd8d8cd56bef13b52a51b7b60f623eec6
