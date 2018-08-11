@@ -1,4 +1,5 @@
 #include <stdio.h>
+<<<<<<< HEAD
 void swap (char *x, char *y)
 {
     char temp;
@@ -28,3 +29,5 @@ int main()
     heappermute(catdog, i);
     return 0;
 }
+=======
+>>>>>>> ff78da2e871674cbfdd9f52508e7ffabadecc438
