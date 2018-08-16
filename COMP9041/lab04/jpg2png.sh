@@ -11,6 +11,6 @@ done
 
 for file in *.jpg
 do
-	convert "$file" "${file%.jpg}.png"
+	convert "$file" "${file%.*}.png"
 	rm "$file"
 done
