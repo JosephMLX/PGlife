@@ -13,4 +13,3 @@ coding notes, labs, quizes
 -- COMP9032<br>
 -- COMP9321<br>
 -- COMP9024
-`
