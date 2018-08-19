@@ -21,7 +21,21 @@ int main(int argc, char *argv[]) {
    if (argc == 2) {
 
       /*** Insert your code for stage 1 here ***/
-      
+      int records = atoi(argv[1]);
+      cardRecordT *ptr = malloc(records * sizeof(cardRecordT));
+      assert(ptr != NULL);
+      int i;
+      for (i=0; i<records; i++) {
+         printf("Enter card ID: ");
+         while (readValidID() == 0) {
+            printf("Not valid. Enter a valid value: ");
+         }
+         ptr[i].cardID = readValidID();
+         printCardData(ptr[i]);
+      }
+      printf("Number of cards on file: %d\n", records);
+      free(ptr);
+
    } else {
       CardLinkedListProcessing();
    }

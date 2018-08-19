@@ -7,39 +7,52 @@
 
 // scan input line for a positive integer, ignores the rest, returns NO_NUMBER if none
 int readInt(void) {
-   char line[LINE_LENGTH];
-   int  n;
+	char line[LINE_LENGTH];
+	int  n;
 
-   fgets(line, LINE_LENGTH, stdin);
-   if ( (sscanf(line, "%d", &n) != 1) || n <= 0 )
-      return NO_NUMBER;
-   else
-      return n;
+	fgets(line, LINE_LENGTH, stdin);
+	if ( (sscanf(line, "%d", &n) != 1) || n <= 0 )
+		return NO_NUMBER;
+	else
+		return n;
 }
 
 // scan input for a floating point number, ignores the rest, returns NO_NUMBER if none
 float readFloat(void) {
-   char  line[LINE_LENGTH];
-   float f;
+	char  line[LINE_LENGTH];
+	float f;
 
-   fgets(line, LINE_LENGTH, stdin);
-   if (sscanf(line, "%f", &f) != 1)
-      return NO_NUMBER;
-   else
-      return f;
+	fgets(line, LINE_LENGTH, stdin);
+	if (sscanf(line, "%f", &f) != 1)
+		return NO_NUMBER;
+	else
+		return f;
 }
 
 int readValidID(void) {
-
-   return 0;  /* needs to be replaced */
+	int ID = readInt();     // get ID from readInt
+	int n = ID;
+	int digits = 0;
+	while (n != 0) {
+		n /= 10;
+		++digits;
+	}
+	if (digits == 8) {
+		return ID;
+	}
+	return 0;  /* needs to be replaced */
 }
 
 float readValidAmount(void) {
 
-   return 0;  /* needs to be replaced */
+	return 0;  /* needs to be replaced */
 }
 
 void printCardData(cardRecordT card) {
 
-   return;  /* needs to be replaced */
+	printf("-----------------\n");
+	printf("Card ID: \n");
+	printf("Balance: \n");
+	printf("-----------------\n");
+	return;  /* needs to be replaced */
 }
