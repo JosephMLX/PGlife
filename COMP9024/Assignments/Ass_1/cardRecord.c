@@ -60,9 +60,9 @@ void printCardData(cardRecordT card) {
 	printf("-----------------\n");
 	printf("Card ID: %d\n", card.cardID);
 	printf("Balance: $%.2f\n", card.balance);
-	printf("-----------------\n");
 	if (card.balance < 5) {
 		printf("Low balance\n");
 	}
+	printf("-----------------\n");
 	return;  /* needs to be replaced */
 }
