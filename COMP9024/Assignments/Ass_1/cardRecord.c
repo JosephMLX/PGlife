@@ -4,6 +4,7 @@
 
 #define LINE_LENGTH 1024
 #define NO_NUMBER -999
+#define OUT_OF_LIMIT 1000
 
 // scan input line for a positive integer, ignores the rest, returns NO_NUMBER if none
 int readInt(void) {
@@ -32,27 +33,36 @@ float readFloat(void) {
 int readValidID(void) {
 	int ID = readInt();     // get ID from readInt
 	int n = ID;
-	int digits = 0;
+	int digit = 0;
 	while (n != 0) {
 		n /= 10;
-		++digits;
+		++digit;
 	}
-	if (digits == 8) {
+	if (digit == 8) {
 		return ID;
 	}
+	// 0012345678 ?????
 	return 0;  /* needs to be replaced */
 }
 
 float readValidAmount(void) {
-
-	return 0;  /* needs to be replaced */
+	float amount = readFloat();
+	if (amount == -0) {
+		amount = 0;
+	}
+	if (amount >= -2.35 && amount <= 250) {
+		return amount;
+	}
+	return OUT_OF_LIMIT;  /* needs to be replaced */
 }
 
 void printCardData(cardRecordT card) {
-
 	printf("-----------------\n");
-	printf("Card ID: \n");
-	printf("Balance: \n");
+	printf("Card ID: %d\n", card.cardID);
+	printf("Balance: $%.2f\n", card.balance);
 	printf("-----------------\n");
+	if (card.balance < 5) {
+		printf("Low balance\n");
+	}
 	return;  /* needs to be replaced */
 }

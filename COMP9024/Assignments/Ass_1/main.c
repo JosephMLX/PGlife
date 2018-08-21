@@ -25,18 +25,31 @@ int main(int argc, char *argv[]) {
       cardRecordT *ptr = malloc(records * sizeof(cardRecordT));
       assert(ptr != NULL);
       int i;
+      float avg = 0;
       for (i=0; i<records; i++) {
+         int id;
+         float amount;
          printf("Enter card ID: ");
-         while (readValidID() == 0) {
+         while (!(id = readValidID())) {
             printf("Not valid. Enter a valid value: ");
          }
-         ptr[i].cardID = readValidID();
-         printCardData(ptr[i]);
+         ptr[i].cardID = id;
+         printf("Enter amount: ");
+         while ((amount = readValidAmount()) == 1000) {
+            printf("Not valid. Enter a valid value: ");
+         }
+         ptr[i].balance = amount;
       }
+      for (i=0; i<records; i++) {
+         printCardData(ptr[i]);
+         avg += ptr[i].balance;
+      }
+      avg /= i;
       printf("Number of cards on file: %d\n", records);
+      printf("Average balance: $%.2f\n", avg);
       free(ptr);
-
-   } else {
+   }
+   else {
       CardLinkedListProcessing();
    }
    return 0;
