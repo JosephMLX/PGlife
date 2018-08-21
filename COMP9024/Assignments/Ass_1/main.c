@@ -8,6 +8,7 @@
 **/
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <assert.h>
 #include <ctype.h>
 
@@ -46,8 +47,13 @@ int main(int argc, char *argv[]) {
       }
       avg /= i;
       printf("Number of cards on file: %d\n", records);
+      if (avg < 0) {
+         printf("Average balance: -$%.2f\n", fabs(avg));
+      }
+      else {
       printf("Average balance: $%.2f\n", avg);
       free(ptr);
+      }
    }
    else {
       CardLinkedListProcessing();

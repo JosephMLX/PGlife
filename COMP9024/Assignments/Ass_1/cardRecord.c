@@ -1,5 +1,7 @@
 // Transport card record implementation ... Assignment 1 COMP9024 18s2
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "cardRecord.h"
 
 #define LINE_LENGTH 1024
@@ -59,10 +61,15 @@ float readValidAmount(void) {
 void printCardData(cardRecordT card) {
 	printf("-----------------\n");
 	printf("Card ID: %d\n", card.cardID);
-	printf("Balance: $%.2f\n", card.balance);
-	printf("-----------------\n");
+	if (card.balance < 0) {
+		printf("Balance: -$%.2f\n", fabs(card.balance));
+	}
+	else {
+		printf("Balance: $%.2f\n", card.balance);
+	}
 	if (card.balance < 5) {
 		printf("Low balance\n");
 	}
+	printf("-----------------\n");
 	return;  /* needs to be replaced */
 }
