@@ -61,16 +61,13 @@ float readValidAmount(void) {
 void printCardData(cardRecordT card) {
 	printf("-----------------\n");
 	printf("Card ID: %d\n", card.cardID);
-<<<<<<< HEAD
 	printf("Balance: $%.2f\n", card.balance);
-=======
 	if (card.balance < 0) {
 		printf("Balance: -$%.2f\n", fabs(card.balance));
 	}
 	else {
 		printf("Balance: $%.2f\n", card.balance);
 	}
->>>>>>> 4a01928710bf928412adc955872b5c506b0163de
 	if (card.balance < 5) {
 		printf("Low balance\n");
 	}
