@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
       /*** Insert your code for stage 1 here ***/
       int records = atoi(argv[1]);
-      cardRecordT *ptr = malloc(records * sizeof(cardRecordT));
+      cardRecordT *ptr = malloc(records * sizeof(cardRecordT));    // set the dynamic array cardRecordT
       assert(ptr != NULL);
       int i;
       float avg = 0;
@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
          int id;
          float amount;
          printf("Enter card ID: ");
-         while (!(id = readValidID())) {
+         while (!(id = readValidID())) {                   // keep asking ID until the return ID is right(8 digits integer)
             printf("Not valid. Enter a valid value: ");
          }
          ptr[i].cardID = id;
-         printf("Enter amount: ");
+         printf("Enter amount: ");                         // keep asking the amount when the return number is 1000(return of wrong input)
          while ((amount = readValidAmount()) == 1000) {
             printf("Not valid. Enter a valid value: ");
          }
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
       avg /= i;
       printf("Number of cards on file: %d\n", records);
       if (avg < 0) {
-         printf("Average balance: -$%.2f\n", fabs(avg));
+         printf("Average balance: -$%.2f\n", fabs(avg));   // change the format to -$avg for negative numbers
       }
       else {
       printf("Average balance: $%.2f\n", avg);
