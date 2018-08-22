@@ -22,18 +22,24 @@ typedef struct ListRep {
 
 /*** Your code for stages 2 & 3 starts here ***/
 
-// Time complexity: 
+// Time complexity: O(1)
 // Explanation: 
 List newLL() {
-
-   return NULL;  /* needs to be replaced */
+   List L = malloc(sizeof(ListRep));
+   L->head = NULL;
+   return L;  /* needs to be replaced */
 }
 
 // Time complexity: 
 // Explanation: 
 void dropLL(List listp) {
-
-   return;  /* needs to be replaced */
+   NodeT *curr = listp->head;
+   while (curr != NULL) {
+      NodeT *temp = curr->next;
+      free(curr);
+      curr = temp;
+   }
+   free(listp);  /* needs to be replaced */
 }
 
 // Time complexity: 
@@ -46,8 +52,12 @@ void removeLL(List listp, int cardID) {
 // Time complexity: 
 // Explanation: 
 void insertLL(List listp, int cardID, float amount) {
-
-   return;  /* needs to be replaced */
+   NodeT *new = malloc(sizeof(NodeT));
+   assert(new != NULL);
+   new->data.cardID = cardID;
+   new->data.balance = amount;
+   new->next = listp->head;
+   listp->head = new;  /* needs to be replaced */
 }
 
 // Time complexity: 
