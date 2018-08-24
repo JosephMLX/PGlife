@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include "cardLL.h"
 #include "cardRecord.h"
 
@@ -63,13 +64,44 @@ void insertLL(List listp, int cardID, float amount) {
 // Time complexity: 
 // Explanation: 
 void getAverageLL(List listp, int *n, float *balance) {
-
-   return;  /* needs to be replaced */
+   NodeT *start = listp->head;
+   int cardNum = 0;
+   float avg = 0;
+   while (start != NULL) {
+      cardNum++;
+      avg += start->data.balance;
+      start = start->next;
+   }
+   if (cardNum == 0) {
+      printf("Number of cards on file: 0\n");
+      printf("Average balance: $0.00\n");
+   }  else {
+      avg /= cardNum;
+      printf("Number of cards on file: %d\n", cardNum);
+      if (avg < 0) {
+         printf("Average balance: -$%.2f\n", fabs(avg));
+      } else {
+         printf("Average balance: $%.2f\n", avg);
+      }
+   }
 }
 
 // Time complexity: 
 // Explanation: 
 void showLL(List listp) {
-
-   return;  /* needs to be replaced */
+   NodeT *start = listp->head;
+   while (start != NULL) {
+      printf("-----------------\n");
+      printf("Card ID: %d\n", start->data.cardID);
+      if (start->data.balance < 0) {
+         printf("Balance: -$%.2f\n", fabs(start->data.balance));
+	  } else {
+         printf("Balance: $%.2f\n", start->data.balance);
+	  }
+	  if (start->data.balance < 5) {
+         printf("Low balance\n");
+	  }
+      printf("-----------------\n");
+      start = start->next;
+   }
 }
