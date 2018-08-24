@@ -40,14 +40,14 @@ void dropLL(List listp) {
       free(curr);
       curr = temp;
    }
-   free(listp);  /* needs to be replaced */
+   free(listp);
 }
 
 // Time complexity: 
 // Explanation: 
 void removeLL(List listp, int cardID) {
-
-   return;  /* needs to be replaced */
+   NodeT *slow = listp->head;
+   printf("cardID: %d\n", slow->data.cardID);
 }
 
 // Time complexity: 
@@ -58,7 +58,7 @@ void insertLL(List listp, int cardID, float amount) {
    new->data.cardID = cardID;
    new->data.balance = amount;
    new->next = listp->head;
-   listp->head = new;  /* needs to be replaced */
+   listp->head = new;
 }
 
 // Time complexity: 
