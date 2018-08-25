@@ -98,7 +98,6 @@ void CardLinkedListProcessing() {
             while ((newAmount = readValidAmount()) == 1000) {
             printf("Not valid. Enter a valid value: ");
             }
-            printf("Card added.\n");
             insertLL(list, cardID, newAmount);
 
 	    break;
@@ -126,7 +125,9 @@ void CardLinkedListProcessing() {
          case 'R':
             /*** Insert your code for removing a card record ***/
             printf("Enter card ID: ");
-            removeID = readValidID();
+            while (!(removeID = readValidID())) {
+            printf("Not valid. Enter a valid value: ");
+            }
             removeLL(list, removeID);
 
 	    break;

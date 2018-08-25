@@ -33,7 +33,10 @@ List newLL() {
 }
 
 // Time complexity: O(n);
-// Explanation: 
+// Explanation: This function use a while loop to travel all nodes in the 
+//              linked list, free every node and finally drop the linked 
+//              list. Time complexity increases linearly when card records 
+//              increases;
 void dropLL(List listp) {
    NodeT *curr = listp->head;
    while (curr != NULL) {
@@ -44,8 +47,13 @@ void dropLL(List listp) {
    free(listp);
 }
 
-// Time complexity: 
-// Explanation: 
+// Time complexity: O(1) when remove the first node in the linked list;
+//                  O(n) when remove other nodes;
+// Explanation: Firstly, if the linked list only has one node, check 
+//              whether it matches the cardID. Then, use a while loop to
+//              travel all nodes in the linked list to find the position 
+//              of the node we want to remove. Time complexity increases
+//              linearly when card records increases;
 void removeLL(List listp, int cardID) {
    NodeT *slow = listp->head;
    NodeT *fast = listp->head;
@@ -69,7 +77,6 @@ void removeLL(List listp, int cardID) {
          if (cardID == fast->data.cardID) {
             printf("Card removed.\n");
             slow->next = fast->next;
-            free(fast);
             return;
          } else {
             slow = fast;
@@ -89,19 +96,73 @@ void removeLL(List listp, int cardID) {
    }            
 }
 
-// Time complexity: 
-// Explanation: 
+// Time complexity: O(1) when linked list is empty before;
+//                  O(n) when linked list already existed;
+// Explanation: If the linked list is empty, insert the node to head.
+//              Use while loop to travel all nodes in the linked list,
+//              if the cardID already existed, make a transaction. If the
+//              cardID is not in the linked list, compare cardID and ID of
+//              nodes, insert it in ascending order;
 void insertLL(List listp, int cardID, float amount) {
    NodeT *new = malloc(sizeof(NodeT));
    assert(new != NULL);
+   new->next = NULL;
+   NodeT *curr = listp->head;
    new->data.cardID = cardID;
    new->data.balance = amount;
-   new->next = listp->head;
-   listp->head = new;
+   if (curr == NULL || curr->data.cardID > new->data.cardID) {
+      new->next = curr;
+      listp->head = new;
+      printf("Card added.\n");
+   }  else {
+      while (curr != NULL) {
+         if (curr->data.cardID == new->data.cardID) {
+            curr->data.balance += amount;
+            printf("-----------------\n");
+            printf("Card ID: %d\n", curr->data.cardID);
+            if (curr->data.balance < 0) {
+               printf("Balance: -$%.2f\n", fabs(curr->data.balance));
+	        } else {
+               printf("Balance: $%.2f\n", curr->data.balance);
+	        }
+	        if (curr->data.balance < 5) {
+               printf("Low balance\n");
+	        }
+            printf("-----------------\n");
+            return;
+         }
+         curr = curr->next;   
+      }
+      curr = listp->head;   
+      while (curr->next != NULL) {
+         if (curr->data.cardID > new->data.cardID) {
+            new = curr;
+            curr = new->next;
+            printf("Card added.\n");
+         } else if (curr->data.cardID == new->data.cardID) {
+            
+         } else if (curr->data.cardID < new->data.cardID){
+            curr = curr->next;
+         }   
+      }
+      if (curr->next == NULL) {
+         if (curr->data.cardID > new->data.cardID) {
+            new = curr;
+            curr = new->next;
+            printf("Card added.\n");
+         } else if (curr->data.cardID < new->data.cardID) {
+            curr->next = new;
+            printf("Card added.\n");
+         }
+      }
+   }         
 }
 
 // Time complexity: O(n);
-// Explanation: 
+// Explanation: This function use a while loop to travel all nodes in the 
+//              linked list, record items and sum up the balance. 
+//              Time complexity increases linearly when card records 
+//              increases;
 void getAverageLL(List listp, int *n, float *balance) {
    NodeT *start = listp->head;
    int cardNum = 0;
@@ -131,6 +192,9 @@ void getAverageLL(List listp, int *n, float *balance) {
 //              complexity increases linearly when card records increases;
 void showLL(List listp) {
    NodeT *start = listp->head;
+   if (start == NULL) {
+      return;
+   }
    while (start != NULL) {
       printf("-----------------\n");
       printf("Card ID: %d\n", start->data.cardID);
