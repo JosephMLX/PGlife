@@ -23,15 +23,16 @@ typedef struct ListRep {
 
 /*** Your code for stages 2 & 3 starts here ***/
 
-// Time complexity: O(1)
-// Explanation: 
+// Time complexity: O(1);
+// Explanation: This function initiate the linked list there is no loops in 
+//              the function, time complexity should be constant;
 List newLL() {
    List L = malloc(sizeof(ListRep));
    L->head = NULL;
    return L;  /* needs to be replaced */
 }
 
-// Time complexity: 
+// Time complexity: O(n);
 // Explanation: 
 void dropLL(List listp) {
    NodeT *curr = listp->head;
@@ -47,7 +48,45 @@ void dropLL(List listp) {
 // Explanation: 
 void removeLL(List listp, int cardID) {
    NodeT *slow = listp->head;
-   printf("cardID: %d\n", slow->data.cardID);
+   NodeT *fast = listp->head;
+   if (slow->next == NULL) {
+      if (cardID == slow->data.cardID) {
+         printf("Card removed.\n");
+         listp->head = NULL;
+         return;
+      } else {
+         printf("Card not found.\n");
+      } 
+   } else {
+      fast = slow->next;
+      if (slow->data.cardID == cardID) {
+         printf("Card removed.\n");
+         listp->head = fast;
+         free(slow);
+         return;
+      }
+      while (fast->next != NULL) {
+         if (cardID == fast->data.cardID) {
+            printf("Card removed.\n");
+            slow->next = fast->next;
+            free(fast);
+            return;
+         } else {
+            slow = fast;
+            fast = fast->next;
+         }
+      }
+      if (fast->next == NULL) {
+         if (cardID == fast->data.cardID) {
+            printf("Card removed.\n");
+            slow->next = NULL;
+            free(fast);
+            return;
+         } else {
+            printf("Card not found.\n");
+         }
+      }
+   }            
 }
 
 // Time complexity: 
@@ -61,7 +100,7 @@ void insertLL(List listp, int cardID, float amount) {
    listp->head = new;
 }
 
-// Time complexity: 
+// Time complexity: O(n);
 // Explanation: 
 void getAverageLL(List listp, int *n, float *balance) {
    NodeT *start = listp->head;
@@ -86,8 +125,10 @@ void getAverageLL(List listp, int *n, float *balance) {
    }
 }
 
-// Time complexity: 
-// Explanation: 
+// Time complexity: O(n);
+// Explanation: This function use a while loop to travel all nodes in the 
+//              linked list and print the card record infomation, time
+//              complexity increases linearly when card records increases;
 void showLL(List listp) {
    NodeT *start = listp->head;
    while (start != NULL) {

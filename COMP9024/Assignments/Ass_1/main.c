@@ -126,7 +126,7 @@ void CardLinkedListProcessing() {
          case 'R':
             /*** Insert your code for removing a card record ***/
             printf("Enter card ID: ");
-            scanf("%d", &removeID);
+            removeID = readValidID();
             removeLL(list, removeID);
 
 	    break;
