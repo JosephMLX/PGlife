@@ -65,7 +65,11 @@ int main(int argc, char *argv[]) {
 
 void CardLinkedListProcessing() {
    int op, ch;
-
+   int cardID;
+   int removeID;
+   float newAmount;
+   int *cardNums = NULL;
+   float *average = NULL;
    List list = newLL();   // create a new linked list
    
    while (1) {
@@ -85,12 +89,23 @@ void CardLinkedListProcessing() {
          case 'a':
          case 'A':
             /*** Insert your code for adding a card record ***/
+                      
+            printf("Enter card ID: ");
+            while (!(cardID = readValidID())) {
+            printf("Not valid. Enter a valid value: ");
+            }
+            printf("Enter amount: ");
+            while ((newAmount = readValidAmount()) == 1000) {
+            printf("Not valid. Enter a valid value: ");
+            }
+            insertLL(list, cardID, newAmount);
 
 	    break;
 
          case 'g':
          case 'G':
             /*** Insert your code for getting average balance ***/
+            getAverageLL(list, cardNums, average);
 
 	    break;
 	    
@@ -102,12 +117,18 @@ void CardLinkedListProcessing() {
          case 'p':
          case 'P':
             /*** Insert your code for printing all card records ***/
+            showLL(list);
 
 	    break;
 
          case 'r':
          case 'R':
             /*** Insert your code for removing a card record ***/
+            printf("Enter card ID: ");
+            while (!(removeID = readValidID())) {
+            printf("Not valid. Enter a valid value: ");
+            }
+            removeLL(list, removeID);
 
 	    break;
 
