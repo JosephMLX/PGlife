@@ -15,11 +15,14 @@ while ($line = <F>) {
 		@arr = split ' ', $line;
 		foreach $i (@arr) {
 			$i =~ s/\.//;
-			if ($i =~ /[A-Z]{4}[0-9]{4}/) {
-				print "$i", "\n";
+			if ($i =~ /([A-Z]{4}[0-9]{4})/) {
+				$i = $1;
+				$hash{$i} = 0;
 			}
 		}
-
 	}
+}
+for $key (sort keys %hash) {
+	print "$key\n";
 }
 
