@@ -29,7 +29,7 @@ foreach my $file (@ARGV) {
 		my @words = split(' ', $line);
 		foreach my $word (@words) {
 			foreach my $key (keys %hash) {
-				if (exists $hash{$key}{$word}) {
+				if (defined $hash{$key}{$word}) {
 					$hash{$key}{log_probility} += log(($hash{$key}{$word}+1)/$hash{$key}{total_count});
 				}
 				else {
