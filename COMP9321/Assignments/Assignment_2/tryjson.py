@@ -13,18 +13,25 @@ result = {
   			"creation_time" : "<creation_time>",
   			"entries" : {}
 		 }
-
+entries = []
 for i in range(1, page_number + 1):
 	r = requests.get(url+"&page="+str(i))
-	item_in_one_page = r.json()	
-	print(len(item_in_one_page[1]))
+	entries_in_one_page = len(r.json()[1])
+	content = r.json()
+	for j in range(entries_in_one_page):
+		entry = {"country": "", "date": "", "value": ""}
+		entry["country"] = content[1][j]["country"]["value"]
+		entry["date"] = content[1][j]["date"]
+		entry["value"] = content[1][j]["value"]
+		entries.append(entry)
+		
 
 #for i in range(len(long_data[1])):
 #	result['entries']['country'] = long_data[1][i]["country"]["value"]
 #	result['entries']['date'] = long_data[1][i]["date"],
 #	result['entries']["value"] = long_data[1][i]["value"]
-
+result["entries"] = entries
 result = json.dumps(result)
-
-#print(result)
-print(page_number)
+result = json.loads(result)
+print(result)
+#print(entries)
