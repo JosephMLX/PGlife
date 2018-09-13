@@ -2,3 +2,4 @@
 Date		Start	Stop	Activity	Comments
 13/09/18	10:30	11:30	reading		read the introduction of the assignment
 13/09/18	11:30	12:00	coding		build the main structure and write the 'init' function, producing the same error messages as 2041 legit
+										to-do: check whether the command is in the variable command list
