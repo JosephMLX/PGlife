@@ -36,7 +36,7 @@ foreach my $shell_line (@shell_lines) {
 
 foreach my $shell_line (@shell_lines) {
 	next if ($shell_line eq "" or $shell_line =~ /do/ or $shell_line =~ /then/);
-	if ($shell_line =~ /\(.*[<=>] | \([<=>]=/) {
+	if ($shell_line =~ /\(.*[<=>] | \([<=>]=/) {		# for if & while condition
 		my @line_splited = split ('\(', $shell_line);
 		$line_splited[1] =~ s/\) \{//;
 		my @caculate = split (' ', $line_splited[1]);
@@ -62,6 +62,9 @@ foreach my $shell_line (@shell_lines) {
 		while ($i < $items) {
 			if ($caculate[$i] =~ /[a-z]/ and $caculate[$i] !~ /\$/) {
 				$caculate[$i] = "\$$caculate[$i]";
+			}
+			if ($caculate[$i] =~ /[0-9]/) {
+				$caculate[$i] =~ s/\$//;
 			}
 			$i += 1;
 		}
