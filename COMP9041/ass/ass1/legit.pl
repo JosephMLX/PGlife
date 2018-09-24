@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 
 use File::Copy "cp";
+use File::Compare;
 
 $legit_dir = ".legit";					# create a directory named .legit
 $index_path = "$legit_dir/index";		# index path in repo
@@ -42,7 +43,7 @@ sub add {
 			print "legit.pl: error: invalid filename '$file'\n";
 			exit 1;
 		}	
-		if (!-e "$file") {				# terminate if added file doesn't exist
+		if (!-e "$file" && !-e "$index_path/$file") {				# terminate if added file doesn't exist
 			print "legit.pl: error: can not open '$file'\n";
 			exit 1;	
 		}
@@ -51,6 +52,9 @@ sub add {
 		mkdir "$index_path" or die;		# create index dir in repo if it doesn't exist
 	}
 	foreach my $file (@files) {
+		if (-e "$index_path/$file" && !-e "$file") {
+			unlink "$index_path/$file";
+		}
 		cp "$file", $index_path;		# copy files to index dir
 	}
 }
@@ -93,13 +97,37 @@ sub commit_file {
 	my $commit_time = 0;		# set a counter to record dir retrieve times
 	my $commited_folder = "$legit_dir/".".commit";
 	my $folder = "$commited_folder"."$commit_time";
-	my $index_content = "";
-	my $last_commit_content = "";
 	my @index_files = glob "$index_path/*";
-	if (!defined $index_files[0]) {
+	if (!defined $index_files[0] && !-d $folder) {
 		print "nothing to commit\n";
 		exit 1;
 	}
+	while (-d $folder) {
+		$commit_time += 1;
+		$folder = "$commited_folder"."$commit_time";
+	}
+	if (compare_with_last_commit() == 1) {
+		print "nothing to commit\n";
+		exit 1;
+	}
+	my $new_folder = "$commited_folder"."$commit_time";
+	mkdir "$new_folder";
+	foreach my $file (glob "$index_path/*") {
+		cp $file, "$new_folder"			# copy files from index to new commit dir
+	}
+	open my $file, '>>', "$legit_log" or die;	# write commit time and commit message to legit log
+	print $file "$commit_time @commit_msg\n";
+	close $file;
+	print "Committed as commit $commit_time\n";
+}
+
+sub compare_with_last_commit {
+	my $commit_time = 0;		# set a counter to record dir retrieve times
+	my $commited_folder = "$legit_dir/".".commit";
+	my $folder = "$commited_folder"."$commit_time";
+	my $index_content = "";
+	my $last_commit_content = "";
+	my @index_files = glob "$index_path/*";
 	foreach my $index_file (@index_files) {
 		open my $file, '<', "$index_file" or die;
 		my @name_without_path = split('/', $index_file);
@@ -109,13 +137,13 @@ sub commit_file {
 			$index_content .= $line;
 		}
 		close $file;
-		}
+	}
 	while (-d $folder) {
 		$commit_time += 1;
 		$folder = "$commited_folder"."$commit_time";
 	}
 	if ($commit_time > 0) {
-		$last_commit_time = $commit_time - 1;
+		my $last_commit_time = $commit_time - 1;
 		my $last_commit_folder = "$commited_folder"."$last_commit_time";
 		my @last_commit_files = glob "$last_commit_folder/*";
 		foreach my $last_commit_file (@last_commit_files) {
@@ -129,19 +157,11 @@ sub commit_file {
 		close $file;
 		}
 		if ($index_content eq $last_commit_content) {
-			print "nothing to commit\n";
-			exit 1;
+			return 1;
+		} else {
+			return 0;
 		}
 	}
-	my $new_folder = "$commited_folder"."$commit_time";
-	mkdir "$new_folder";
-	foreach my $file (glob "$index_path/*") {
-		cp $file, "$new_folder"			# copy files from index to new commit dir
-	}
-	open my $file, '>>', "$legit_log" or die;	# write commit time and commit message to legit log
-	print $file "$commit_time @commit_msg\n";
-	close $file;
-	print "Committed as commit $commit_time\n";
 }
 
 sub show {
@@ -210,7 +230,93 @@ sub _log {
 
 sub rm {
 	my @rm_command = @_;
-	#foreach my $element (@rm_command)
+	my $commit_time = 0;		# set a counter to record dir retrieve times
+	my $commited_folder = "$legit_dir/".".commit";
+	my $folder = "$commited_folder"."$commit_time";
+	my $index_content = "";
+	my $last_commit_content = "";
+	my @index_files = glob "$index_path/*";
+	if (!-d "$folder") {
+		print "legit.pl: error: your repository does not have any commits yet\n";
+		exit 1;
+	}
+	while (-d $folder) {
+		$commit_time += 1;
+		$folder = "$commited_folder"."$commit_time";
+	}
+	if ($commit_time > 0) {
+		$commit_time--;
+	}
+	my $last_commit_folder = "$commited_folder"."$commit_time";
+	if ($rm_command[0] eq "--cached") {
+		shift @rm_command;
+		rm_check(@rm_command);
+		foreach my $filename (@rm_command) {
+			if (!-e "$index_path/$filename") {
+				print "legit.pl: error: '$filename' is not in the legit repository\n";
+				exit 1;
+			}
+			elsif (compare("$filename", "$index_path/$filename") != 0 && compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
+				print "legit.pl: error: '$filename' in index is different to both working file and repository\n";
+				exit 1;
+			}
+			unlink "$index_path/$filename";
+		}
+	}
+	elsif ($rm_command[0] eq "--force") {
+		shift @rm_command;
+		rm_check(@rm_command);
+		foreach my $filename (@rm_command) {
+			if (!-e "$index_path/$filename") {
+				print "legit.pl: error: '$filename' is not in the legit repository\n";
+				exit 1;
+			}
+			unlink "$index_path/$filename";
+			unlink "$filename";
+		}
+	}
+	else {
+		rm_check(@rm_command);
+		foreach my $filename (@rm_command) {
+			if (!-e "$index_path/$filename") {
+					print "legit.pl: error: '$filename' is not in the legit repository\n";
+					exit 1;
+			}
+			elsif (compare("$filename", "$index_path/$filename") != 0 && compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
+				print "legit.pl: error: '$filename' in index is different to both working file and repository\n";
+				exit 1;
+			}
+			elsif (compare("$filename", "$index_path/$filename") != 0) {
+				print "legit.pl: error: '$filename' in repository is different to working file\n";
+				exit 1;
+			}
+			elsif (compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
+				print "legit.pl: error: '$filename' has changes staged in the index\n";
+				exit 1;			
+			}
+			elsif (compare_with_last_commit() == 0) {
+				print "legit.pl: error: '$filename' has changes staged in the index\n";
+				exit 1;
+			}
+			unlink "$index_path/$filename";
+			unlink "$filename";
+		}	
+	}
+}
+
+sub rm_check {
+	my $err_msg = "usage: legit.pl rm [--force] [--cached] <filenames>";
+	@rm_command = @_;
+	foreach my $filename (@rm_command) {
+		if ($filename =~ /^-.*/) {
+			print "$err_msg\n";
+			exit 1;
+		}
+		elsif ("$filename" !~ /^[a-zA-Z0-9]/ || "$filename" =~ /[^._a-zA-Z0-9-]/) {
+			print "legit.pl: error: invalid filename '$filename'\n";
+			exit 1;
+		}
+	}
 }
 
 sub main {

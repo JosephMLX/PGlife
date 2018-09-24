@@ -1,17 +1,17 @@
 
-Date		Start	Stop	Activity	Comments
-13/09/18	10:30	11:30	reading		read the introduction of the assignment
+Date		Start	Stop	Activity				Comments
+13/09/18	10:30	11:30	reading					read the introduction of the assignment
 
-13/09/18	11:30	12:00	coding		implemented basic init functionality, tried error messages show in 2041 legit
-										to-do: check whether the command is in the variable command list
+13/09/18	11:30	12:00	coding					implemented basic init functionality, tried error messages show in 2041 legit
 
-15/09/18	12:40	14:30	coding		imporved 'init' and main function, wrote 'add' function
-										to-do: learn how to write 'commit' function
+15/09/18	12:40	14:30	coding					imporved 'init' and main function, wrote 'add' function, learn how 'commit' works
 
-15/09/18	16:00	17:00	coding &	implemented basic commit and show functionality (30%), passed first 5 autotests
-							debuging	to-do: rebuild 'add' function for future 'commit -a -m' recall
+15/09/18	16:00	17:00	coding & debugging		implemented basic commit and show functionality (30%), passed first 5 auto-tests
 
-16/09/18	14:00	18:00	coding &	realized all function in Subset 0(init, add, commit, log, show), passed first 9 autotests 	
-							debuging	to-do: improve 'commit -a -m' and learn how to find out commit file not changed
-20/09/18	20:00	21:00	coding &	realized function 'commit -a -m', compare with last commit and passed all autotests in Subset 0
-							debuging	to-do: implement 'rm' function
+16/09/18	14:00	18:00	coding & debugging		realised all function in Subset 0(init, add, commit, log, show), passed first 9 auto-tests 	
+
+18/09/18	22:00	22:30	designing				learn how to compare index with last commit for future use
+
+20/09/18	20:00	21:00	coding & debugging		realised function 'commit -a -m', compare with last commit and passed all auto-tests in Subset 0
+
+24/09/18	14:00	17:30	coding & debugging		realised function 'rm' (70%), rebuild some functions, passed first 14 auto-tests
