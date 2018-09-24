@@ -13,3 +13,5 @@ Date		Start	Stop	Activity	Comments
 
 16/09/18	14:00	18:00	coding &	realized all function in Subset 0(init, add, commit, log, show), passed first 9 autotests 	
 							debuging	to-do: improve 'commit -a -m' and learn how to find out commit file not changed
+20/09/18	20:00	21:00	coding &	realized function 'commit -a -m', compare with last commit and passed all autotests in Subset 0
+							debuging	to-do: implement 'rm' function

@@ -2,7 +2,7 @@
 
 use File::Copy "cp";
 
-$legit_dir = ".legit1";					# create a directory named .legit
+$legit_dir = ".legit";					# create a directory named .legit
 $index_path = "$legit_dir/index";		# index path in repo
 $legit_log = "$legit_dir/.log.txt";		# legit log file
 @commands_hint = "Usage: legit.pl <command> [<args>]\n
@@ -71,8 +71,9 @@ sub commit {
 		for $index_file (@index_files) {
 			if (-e $index_file) {
 				my @name_without_path = split('/', $index_file);	# get file name after the last slash for using add() function
-				if (-e @name_without_path) {		
-					add ($name_without_path[-1]);	# add current file to index if exists
+				@name_without_path = $name_without_path[-1];
+				if (-e "@name_without_path") {		
+					add (@name_without_path);	# add current file to index if exists
 				} 
 			}
 			else {
@@ -89,34 +90,58 @@ sub commit {
 
 sub commit_file {
 	my @commit_msg = @_;		# get commit message from commit() function
-	my $flag = 0;
 	my $commit_time = 0;		# set a counter to record dir retrieve times
 	my $commited_folder = "$legit_dir/".".commit";
 	my $folder = "$commited_folder"."$commit_time";
+	my $index_content = "";
+	my $last_commit_content = "";
 	my @index_files = glob "$index_path/*";
 	if (!defined $index_files[0]) {
 		print "nothing to commit\n";
 		exit 1;
 	}
-	# retrieve dir in repo to create the dir for new commit, same as snapshot in lab08
-	while ($flag == 0) {
-		if (-d $folder) {
-			$commit_time += 1;
-			$folder = "$commited_folder"."$commit_time";
-		} 
-		else {
-			my $new_folder = "$commited_folder"."$commit_time";
-			mkdir "$new_folder";
-			foreach my $file (glob "$index_path/*") {
-				cp $file, "$new_folder"			# copy files from index to new commit dir
+	foreach my $index_file (@index_files) {
+		open my $file, '<', "$index_file" or die;
+		my @name_without_path = split('/', $index_file);
+		@name_without_path = $name_without_path[-1];
+		$index_content .= "@name_without_path\n";		
+		while (my $line = <$file>) {
+			$index_content .= $line;
+		}
+		close $file;
+		}
+	while (-d $folder) {
+		$commit_time += 1;
+		$folder = "$commited_folder"."$commit_time";
+	}
+	if ($commit_time > 0) {
+		$last_commit_time = $commit_time - 1;
+		my $last_commit_folder = "$commited_folder"."$last_commit_time";
+		my @last_commit_files = glob "$last_commit_folder/*";
+		foreach my $last_commit_file (@last_commit_files) {
+			open my $file, '<', "$last_commit_file" or die;
+			my @name_without_path = split('/', $last_commit_file);
+			@name_without_path = $name_without_path[-1];
+			$last_commit_content .= "@name_without_path\n";		
+			while (my $line = <$file>) {
+				$last_commit_content .= $line;
 			}
-			open my $file, '>>', "$legit_log" or die;	# write commit time and commit message to legit log
-			print $file "$commit_time @commit_msg\n";
-			close $file;
-			print "Committed as commit $commit_time\n";
-			$flag = 1;
+		close $file;
+		}
+		if ($index_content eq $last_commit_content) {
+			print "nothing to commit\n";
+			exit 1;
 		}
 	}
+	my $new_folder = "$commited_folder"."$commit_time";
+	mkdir "$new_folder";
+	foreach my $file (glob "$index_path/*") {
+		cp $file, "$new_folder"			# copy files from index to new commit dir
+	}
+	open my $file, '>>', "$legit_log" or die;	# write commit time and commit message to legit log
+	print $file "$commit_time @commit_msg\n";
+	close $file;
+	print "Committed as commit $commit_time\n";
 }
 
 sub show {
@@ -183,6 +208,11 @@ sub _log {
 	}	
 }
 
+sub rm {
+	my @rm_command = @_;
+	#foreach my $element (@rm_command)
+}
+
 sub main {
 	if ($#ARGV == -1) {					# non-command message and command hints
 		print "@commands_hint";
@@ -207,6 +237,9 @@ sub main {
 	}
 	elsif ($command eq "log") {
 		_log();							# execute _log() function
+	}
+	elsif ($command eq "rm") {
+		rm(@ARGV[1..$#ARGV]);							# execute rm() function
 	}
 	#else {								# terminate if command is not valiable
 	#	print "@commands_hint";
