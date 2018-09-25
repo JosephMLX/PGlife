@@ -15,3 +15,5 @@ Date		Start	Stop	Activity				Comments
 20/09/18	20:00	21:00	coding & debugging		realised function 'commit -a -m', compare with last commit and passed all auto-tests in Subset 0
 
 24/09/18	14:00	17:30	coding & debugging		realised function 'rm' (70%), rebuild some functions, passed first 14 auto-tests
+
+25/09/18	14:30	15:30	debugging				finished function 'rm', passed relative tests in auto-test 15 & 16

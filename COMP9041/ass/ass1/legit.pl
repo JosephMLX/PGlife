@@ -3,9 +3,10 @@
 use File::Copy "cp";
 use File::Compare;
 
-$legit_dir = ".legit";					      # create repo .legit
-$index_path = "$legit_dir/index";		  # index path in repo
+$legit_dir = ".legit";					# create repo .legit
+$index_path = "$legit_dir/index";		# index path in repo
 $legit_log = "$legit_dir/.log.txt";		# legit log file
+$is_force = 0;							# force authority, overwritten in rm function
 @commands_hint = "Usage: legit.pl <command> [<args>]\n
 These are the legit commands:
    init       Create an empty legit repository
@@ -58,6 +59,17 @@ sub add {
 		cp "$file", $index_path;		      # copy files to index dir
 	}
 }
+# caculate total commit time
+sub commit_time {
+	my $commit_time = 0;		# set a counter to record dir retrieve times
+	my $commited_folder = "$legit_dir/".".commit";
+	my $folder = "$commited_folder"."$commit_time";
+	while (-d $folder) {
+		$commit_time += 1;
+		$folder = "$commited_folder"."$commit_time";
+	}
+	return $commit_time;
+}
 
 sub commit {
 	my $error_msg = "usage: legit.pl commit [-a] -m commit-message";
@@ -94,7 +106,7 @@ sub commit {
 
 sub commit_file {
 	my @commit_msg = @_;		# get commit message from commit() function
-	my $commit_time = 0;		# set a counter to record dir retrieve times
+	my $commit_time = 0;
 	my $commited_folder = "$legit_dir/".".commit";
 	my $folder = "$commited_folder"."$commit_time";
 	my @index_files = glob "$index_path/*";
@@ -102,14 +114,11 @@ sub commit_file {
 		print "nothing to commit\n";
 		exit 1;
 	}
-	while (-d $folder) {
-		$commit_time += 1;
-		$folder = "$commited_folder"."$commit_time";
-	}
 	if (compare_with_last_commit() == 1) {
 		print "nothing to commit\n";
 		exit 1;
 	}
+	$commit_time = commit_time();
 	my $new_folder = "$commited_folder"."$commit_time";
 	mkdir "$new_folder";
 	foreach my $file (glob "$index_path/*") {
@@ -122,9 +131,8 @@ sub commit_file {
 }
 # funciton used to compare index files and last commit files
 sub compare_with_last_commit {
-	my $commit_time = 0;		# set a counter to record dir retrieve times
+	my $commit_time = commit_time();
 	my $commited_folder = "$legit_dir/".".commit";
-	my $folder = "$commited_folder"."$commit_time";
 	my $index_content = "";
 	my $last_commit_content = "";
 	my @index_files = glob "$index_path/*";
@@ -137,10 +145,6 @@ sub compare_with_last_commit {
 			$index_content .= $line;
 		}
 		close $file;
-	}
-	while (-d $folder) {
-		$commit_time += 1;
-		$folder = "$commited_folder"."$commit_time";
 	}
 	if ($commit_time > 0) {                    # write all files in last commit as a string
 		my $last_commit_time = $commit_time - 1;
@@ -240,21 +244,25 @@ sub rm {
 		print "legit.pl: error: your repository does not have any commits yet\n";
 		exit 1;
 	}
-	while (-d $folder) {
-		$commit_time += 1;
-		$folder = "$commited_folder"."$commit_time";
-	}
+	$commit_time = commit_time();
 	if ($commit_time > 0) {
 		$commit_time--;
 	}
 	my $last_commit_folder = "$commited_folder"."$commit_time";
 	if ($rm_command[0] eq "--cached") {
 		shift @rm_command;
+		if ($rm_command[0] eq "--force") {
+			$is_force = 1;
+			shift @rm_command;
+		}
 		rm_check(@rm_command);
 		foreach my $filename (@rm_command) {
 			if (!-e "$index_path/$filename") {
 				print "legit.pl: error: '$filename' is not in the legit repository\n";
 				exit 1;
+			}
+			if ($is_force == 1) {			# with force authority
+				unlink "$index_path/$filename";
 			}
 			elsif (compare("$filename", "$index_path/$filename") != 0 && compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
 				print "legit.pl: error: '$filename' in index is different to both working file and repository\n";
@@ -263,17 +271,10 @@ sub rm {
 			unlink "$index_path/$filename";
 		}
 	}
-	elsif ($rm_command[0] eq "--force") {
+	elsif ($rm_command[0] eq "--force") {	# overwrite authority and use recursion
 		shift @rm_command;
-		rm_check(@rm_command);
-		foreach my $filename (@rm_command) {
-			if (!-e "$index_path/$filename") {
-				print "legit.pl: error: '$filename' is not in the legit repository\n";
-				exit 1;
-			}
-			unlink "$index_path/$filename";
-			unlink "$filename";
-		}
+		$is_force = 1;
+		rm(@rm_command);
 	}
 	else {
 		rm_check(@rm_command);
@@ -281,6 +282,10 @@ sub rm {
 			if (!-e "$index_path/$filename") {
 					print "legit.pl: error: '$filename' is not in the legit repository\n";
 					exit 1;    # file not exists in index
+			}
+			if ($is_force == 1) {			# with force authority
+				unlink "$index_path/$filename";
+				unlink "$filename";
 			}
 			elsif (compare("$filename", "$index_path/$filename") != 0 && compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
 				print "legit.pl: error: '$filename' in index is different to both working file and repository\n";
@@ -293,10 +298,6 @@ sub rm {
 			elsif (compare("$index_path/$filename", "$last_commit_folder/$filename") != 0) {
 				print "legit.pl: error: '$filename' has changes staged in the index\n";
 				exit 1;      # files in index and last commit are different
-			}
-			elsif (compare_with_last_commit() == 0) {
-				print "legit.pl: error: '$filename' has changes staged in the index\n";
-				exit 1;      # index dict is different from last commit
 			}
 			unlink "$index_path/$filename";
 			unlink "$filename";
@@ -317,6 +318,17 @@ sub rm_check {
 			exit 1;
 		}
 	}
+}
+
+sub status {
+	my $commit_time = commit_time();
+	if ($commit_time == 0) {
+		print "legit.pl: error: your repository does not have any commits yet\n";
+		exit 1;
+	}
+	$commit_time--;
+	my %file_hash = {};
+	
 }
 
 sub main {
@@ -346,6 +358,9 @@ sub main {
 	}
 	elsif ($command eq "rm") {
 		rm(@ARGV[1..$#ARGV]);			# execute rm() function
+	}
+	elsif ($command eq "status") {
+		status();						# execute status() function
 	}
 	#else {								# terminate if command is not valiable
 	#	print "@commands_hint";
