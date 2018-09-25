@@ -17,3 +17,5 @@ Date		Start	Stop	Activity				Comments
 24/09/18	14:00	17:30	coding & debugging		realised function 'rm' (70%), rebuild some functions, passed first 14 auto-tests
 
 25/09/18	14:30	15:30	debugging				finished function 'rm', passed relative tests in auto-test 15 & 16
+
+25/09/18	16:50	17:50	coding					finished function 'status', passed all auto-tests in Subset 1

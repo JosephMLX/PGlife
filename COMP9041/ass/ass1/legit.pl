@@ -354,7 +354,7 @@ sub status {
     if (!-e "$dir/$key" && !-e "$index_path/$key") {
       $file_hash{$key} = "$key - deleted";
     }
-    elsif (!-e "$index_path/$key" && !-e "$last_commit_folder/$key") {
+    elsif (!-e "$index_path/$key" && -e "$dir/$key") {
       $file_hash{$key} = "$key - untracked";
     }
     elsif (-e "$index_path/$key" && !-e "$last_commit_folder/$key") {
