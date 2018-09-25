@@ -2,11 +2,13 @@
 
 use File::Copy "cp";
 use File::Compare;
+use Cwd qw();
 
 $legit_dir = ".legit";					# create repo .legit
 $index_path = "$legit_dir/index";		# index path in repo
 $legit_log = "$legit_dir/.log.txt";		# legit log file
 $is_force = 0;							# force authority, overwritten in rm function
+$dir = Cwd::cwd();
 @commands_hint = "Usage: legit.pl <command> [<args>]\n
 These are the legit commands:
    init       Create an empty legit repository
@@ -327,8 +329,56 @@ sub status {
 		exit 1;
 	}
 	$commit_time--;
-	my %file_hash = {};
-	
+	my $file_hash = {};
+  my $commited_folder = "$legit_dir/".".commit";
+  my $last_commit_folder = "$commited_folder"."$commit_time";
+  my @index_files = glob "$index_path/*";
+  my @last_commit_files = glob "$last_commit_folder/*";
+  my @local_files = glob "$dir/*";
+  foreach my $local_file (@local_files) {
+    my @name_without_path = split('/', $local_file);
+    @name_without_path = $name_without_path[-1];
+    $file_hash{"@name_without_path"} = 0;
+  }
+  foreach my $index_file (@index_files) {
+    my @name_without_path = split('/', $index_file);	# get file name after the last slash for using add() function
+    @name_without_path = $name_without_path[-1];
+    $file_hash{"@name_without_path"} = 0;
+  }
+  foreach my $last_commit_file (@last_commit_files) {
+    my @name_without_path = split('/', $last_commit_file);	# get file name after the last slash for using add() function
+    @name_without_path = $name_without_path[-1];
+    $file_hash{"@name_without_path"} = 0;
+  }
+  foreach $key (keys %file_hash) {
+    if (!-e "$dir/$key" && !-e "$index_path/$key") {
+      $file_hash{$key} = "$key - deleted";
+    }
+    elsif (!-e "$index_path/$key" && !-e "$last_commit_folder/$key") {
+      $file_hash{$key} = "$key - untracked";
+    }
+    elsif (-e "$index_path/$key" && !-e "$last_commit_folder/$key") {
+      $file_hash{$key} = "$key - added to index";
+    }
+    elsif (!-e "$dir/$key" && (-e "$index_path/$key" || -e "$last_commit_folder/$key")) {
+      $file_hash{$key} = "$key - file deleted";
+    }
+    elsif (compare("$dir/$key", "$index_path/$key") == 0 && compare("$index_path/$key", "$last_commit_folder/$key") == 0 && compare("$dir/$key", "$last_commit_folder/$key") == 0) {
+      $file_hash{$key} = "$key - same as repo";
+    }
+    elsif (compare("$dir/$key", "$index_path/$key") != 0 && compare("$index_path/$key", "$last_commit_folder/$key") != 0 && compare("$dir/$key", "$last_commit_folder/$key") != 0) {
+      $file_hash{$key} = "$key - file changed, different changes staged for commit";
+    }
+    elsif (compare("$dir/$key", "$index_path/$key") == 0 && compare("$index_path/$key", "$last_commit_folder/$key") != 0) {
+      $file_hash{$key} = "$key - file changed, changes staged for commit";
+    }
+    elsif (compare("$dir/$key", "$index_path/$key") != 0 && compare("$index_path/$key", "$last_commit_folder/$key") == 0) {
+      $file_hash{$key} = "$key - file changed, changes not staged for commit";
+    }
+  }
+  foreach $key (sort keys %file_hash) {
+    print "$file_hash{$key}\n";
+  }
 }
 
 sub main {
