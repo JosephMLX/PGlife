@@ -7,6 +7,7 @@ use Cwd qw();
 $legit_dir = ".legit";					# create repo .legit
 $index_path = "$legit_dir/index";		# index path in repo
 $legit_log = "$legit_dir/.log.txt";		# legit log file
+$legit_bch = "$legit_dir/.branch.txt";  # legit branch file
 $is_force = 0;							# force authority, overwritten in rm function
 $dir = Cwd::cwd();
 @commands_hint = "Usage: legit.pl <command> [<args>]\n
@@ -34,7 +35,10 @@ sub init {
 		print "legit.pl: error: .legit already exists\n";
 		exit 1;
 	}
-	mkdir "$legit_dir" or die;	# create repo
+	mkdir "$legit_dir" or die;		# create repo
+	open my $file, '>', "$legit_bch" or die;
+	print $file "master\n";
+	close $file;	
 	print "Initialized empty legit repository in $legit_dir\n";
 }
 
@@ -381,6 +385,69 @@ sub status {
   }
 }
 
+sub branch {
+	my @branch_command = @_;
+	my $command_length = @branch_command;
+	my $commit_time = commit_time();
+	open my $file, '<', "$legit_bch" or die;
+	my @branches = <$file>;
+	close $file;
+	if ($commit_time == 0) {
+		print "legit.pl: error: your repository does not have any commits yet\n";
+		exit 1;
+	}
+	if ($command_length == 0) {
+		foreach my $branch (sort {$a cmp $b} @branches) {
+			print "$branch";
+		}
+	}
+	elsif ($branch_command[0] ne "-d") {
+		if ($command_length > 1) {
+			print "usage: legit.pl branch [-d] <branch>\n";
+			exit 1;
+		}
+		elsif (grep (/^$branch_command[0]$/, @branches)) {
+			print "legit.pl: error: branch '$branch_command[0]' already exists\n";
+			exit 1;
+		}
+		elsif ("$branch_command[0]" !~ /^[a-zA-Z0-9]/ || "$branch_command[0]" =~ /[^._a-zA-Z0-9-]/) {
+			print "legit.pl: error: branch name '$branch_command[0]'\n";
+			exit 1;
+		}
+		else {
+			open my $file, '>>', "$legit_bch" or die;
+			print $file "$branch_command[0]\n";
+		}
+	}
+	elsif ($branch_command[0] eq "-d") {
+		shift @branch_command;
+		if ($command_length > 2) {
+			print "usage: legit.pl branch [-d] <branch>\n";
+			exit 1;
+		}
+		elsif (grep (/^$branch_command[0]$/, @branches)) {
+			if ($branch_command[0] eq "master") {
+				print "legit.pl: error: can not delete branch 'master'\n";
+				exit 1;
+			}
+			open my $file, '>', "$legit_bch" or die;
+			foreach $branch (@branches) {
+				chomp $branch;
+				if ($branch ne $branch_command[0]) {
+					print $file "$branch\n";
+				}
+			}
+			close $file;
+			print "Deleted branch '$branch_command[0]'\n";
+			return;
+		}
+		else {
+			print "legit.pl: error: branch 'b1' does not exist\n";
+			exit 1;
+		}
+	}
+}
+
 sub main {
 	if ($#ARGV == -1) {					# non-command message and command hints
 		print "@commands_hint";
@@ -411,6 +478,9 @@ sub main {
 	}
 	elsif ($command eq "status") {
 		status();						# execute status() function
+	}
+	elsif ($command eq "branch") {
+		branch(@ARGV[1..$#ARGV]);		# execute branch() function
 	}
 	#else {								# terminate if command is not valiable
 	#	print "@commands_hint";

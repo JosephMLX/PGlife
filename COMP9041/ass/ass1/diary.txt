@@ -18,4 +18,6 @@ Date		Start	Stop	Activity				Comments
 
 25/09/18	14:30	15:30	debugging				finished function 'rm', passed relative tests in auto-test 15 & 16
 
-25/09/18	16:50	17:50	coding					finished function 'status', passed all auto-tests in Subset 1
+25/09/18	16:50	17:50	coding					realised function 'status', passed all auto-tests in Subset 1
+
+26/09/18	15:20	16:20	coding					realised function 'branch', passed first 18 auto-tests 
