@@ -10,7 +10,7 @@ Date		Start	Stop	Activity				Comments
 
 16/09/18	14:00	18:00	coding & debugging		realised all function in Subset 0(init, add, commit, log, show), passed first 9 auto-tests 	
 
-18/09/18	22:00	22:30	designing				learn how to compare index with last commit for future use
+18/09/18	22:00	22:30	designing				learned how to compare index with last commit for future use
 
 20/09/18	20:00	21:00	coding & debugging		realised function 'commit -a -m', compare with last commit and passed all auto-tests in Subset 0
 
@@ -20,4 +20,18 @@ Date		Start	Stop	Activity				Comments
 
 25/09/18	16:50	17:50	coding					realised function 'status', passed all auto-tests in Subset 1
 
-26/09/18	15:20	16:20	coding					realised function 'branch', passed first 18 auto-tests 
+26/09/18	15:20	16:20	coding					realised function 'branch', passed first 18 auto-tests
+
+27/09/18	14:00	14:50	designing				learned how to switch branches in Git and improveds the code
+
+27/09/18	17:00	18:30	coding					passed 19th auto-test, but still struggling with switching branches
+
+28/09/18	21:30	23:00	coding					continued with function 'checkout', still haven't figured out totally, passed 20 auto-tests
+
+29/09/18	14:00	15:00	debugging				re-designed the function displaying commit log to handle different branches
+
+29/09/18	16:00	18:00	debugging				tried my best, but no progress made...
+
+30/09/18	14:00	16:00	testing					finished final tests for code written so far, started to write test scripts
+
+01/09/18	15:00	19:00	testing					finished test scripts writing
