@@ -1,3 +1,0 @@
-0 commit on master
-1 commit on b1
-2 commit on b1
