@@ -2,6 +2,8 @@
 
 typedef struct GraphRep *Graph;
 
+typedef struct StackRep *stack;
+
 // vertices are ints
 typedef int Vertex;
 
@@ -14,9 +16,13 @@ typedef struct Edge {
 
 Graph newGraph(int);
 int   numOfVertices(Graph);
-int validV(Graph, Vertex);
+int   validV(Graph, Vertex);
 void  insertEdge(Graph, Edge);
 void  removeEdge(Graph, Edge);
 int   adjacent(Graph, Vertex, Vertex);  // returns weight, or 0 if not adjacent
 void  showGraph(Graph);
+int   findMaxLength(Graph, int);
+int   dfsPathCheck(Graph, Vertex, Vertex, int *);
+stack recordPath(Graph, Vertex, Vertex, int *);
+int   nodesHasLongestPath(Graph, Vertex, Vertex);
 void  freeGraph(Graph);

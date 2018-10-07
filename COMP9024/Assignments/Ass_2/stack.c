@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 #include "stack.h"
 
 typedef struct node {
@@ -38,6 +39,20 @@ int StackIsEmpty(stack S) {
     return (S->height == 0);
 }
 
+int StackLength(stack S) {
+    int len = 0;
+    if (StackIsEmpty(S)) {
+        return len;
+    } else {
+        NodeT *curr = S->top;
+        while (curr != NULL) {
+            curr = curr->next;
+            len++;
+        }
+    }
+    return len;
+}
+
 // insert an int on top of stack
 void StackPush(stack S, int v) {
     NodeT *new = malloc(sizeof(NodeT));
@@ -57,4 +72,17 @@ int StackPop(stack S) {
     int d = head->data;
     free(head);
     return d;
+}
+
+void StackPrint(stack S) {
+    int len = StackLength(S);
+    NodeT *curr = S->top;
+    int d = curr->data;
+    printf("%d", d);
+    while (len != 1) {
+        curr = curr->next;
+        d = curr->data;
+        printf(" < %d", d);
+        len--;
+    }
 }

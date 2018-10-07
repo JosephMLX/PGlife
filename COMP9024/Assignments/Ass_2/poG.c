@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "WGraph.h"
-#include "queue.h"
+#include "stack.h"
 
 #define MAX_NODES 1000
 
@@ -36,7 +36,7 @@ int divisor_num(int num) {
 	int i;
 	int j = 0;
 	for (i=1; i<=num; i++) {
-		if (num % i == 0 && isSubset(i, num)) {
+		if (num % i == 0) {
 			j += 1;
 		}
 	}
@@ -50,7 +50,7 @@ int *divisor_list(int num, int len) {
 	arr = malloc(len * sizeof(int));
 	assert(arr != NULL);
 	for (i=1; i<=num; i++) {
-		if (num % i == 0 && isSubset(i, num)) {
+		if (num % i == 0) {
 			arr[j] = i;
 			j++;
 		}
@@ -91,26 +91,36 @@ int main(int argc, char *argv[]) {
 	int num = atoi(argv[1]);
 	int nodes = divisor_num(num);
 	int *arr = divisor_list(num, nodes);
+	int nodeLength[nodes];
 	int i;
 	Graph g = divisor_Graph(nodes, arr);
 	printf("Partial order:\n");
 	for (i=0; i<nodes; i++) {
 		print_partial_order(g, i, arr);
+		nodeLength[i] = nodesHasLongestPath(g, i, nodes-1);
 	}
-	printf("\nLongest monotonically increasing sequences:\n");
-	if (num == 121) {
-		printf("1 < 11 < 121");
+	printf("\nLongest monotonically increasing sequences:");
+	// showGraph(g);
+	int m = findMaxLength(g, nodes);
+	if (m == 0) {
+		for (i=0; i<nodes; i++) {
+			printf("\n%d", arr[i]);
+		}
 	}
-	if (num == 9481) {
-		printf("1 < 19 < 9481\n");
+	for (i=0; i<nodes; i++) {
+		if (nodeLength[i] == m) {
+			// printPath(g, i, nodes-1, arr);
+			stack s = recordPath(g, i, nodes-1, arr);
+			printf("\n");
+			StackPrint(s);
+		}
 	}
-	if (num == 125) {
-		printf("5 < 25 < 125\n");
-	}
-	if (num == 143) {
-		printf("1 < 11 < 143\n");
-		printf("1 < 13 < 143\n");
-	}
+	// StackPush(s, 25);
+	// StackPush(s, 5);
+	// printf("%d\n", StackLength(s));
+	// StackPrint(s);
+	
+	// printf("\n%d\n", findPathDFS(g, 0, 1));
 	free(arr);
 	freeGraph(g);
 	return 0;
