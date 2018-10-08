@@ -4,6 +4,8 @@ typedef struct GraphRep *Graph;
 
 typedef struct StackRep *stack;
 
+typedef struct QueueRep *queue;
+
 // vertices are ints
 typedef int Vertex;
 
@@ -23,6 +25,9 @@ int   adjacent(Graph, Vertex, Vertex);  // returns weight, or 0 if not adjacent
 void  showGraph(Graph);
 int   findMaxLength(Graph, int);
 int   dfsPathCheck(Graph, Vertex, Vertex, int *);
-stack recordPath(Graph, Vertex, Vertex, int *);
+// stack recordPath(Graph, Vertex, Vertex, int *);
+queue bfsPathRecord(Graph, Vertex, int);
+queue bfsRecursiveFindPath(Graph, queue);
+void  tryatry(queue);
 int   nodesHasLongestPath(Graph, Vertex, Vertex);
 void  freeGraph(Graph);

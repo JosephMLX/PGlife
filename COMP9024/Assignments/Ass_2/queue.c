@@ -1,19 +1,32 @@
 // Queue ADT implementation ... COMP9024 18s2
+// Edited by Lingxu Meng for COMP9024 18s2 assignment2
 
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 #include "queue.h"
+#include "stack.h"
 
-typedef struct node {
-   int data;
-   struct node *next;
-} NodeT;
+typedef struct stackNode {
+   stack stackData;
+   struct stackNode *next;
+} NodeTS;
 
 typedef struct QueueRep {
    int   length;
-   NodeT *head;
-   NodeT *tail;
+   NodeTS *head;
+   NodeTS *tail;
 } QueueRep;
+
+typedef struct node {
+    int data;
+    struct node *next;
+} NodeT;
+
+typedef struct StackRep {
+    int    height;
+    NodeT *top;
+} StackRep;
 
 // set up empty queue
 queue newQueue() {
@@ -26,9 +39,9 @@ queue newQueue() {
 
 // remove unwanted queue
 void dropQueue(queue Q) {
-   NodeT *curr = Q->head;
+   NodeTS *curr = Q->head;
    while (curr != NULL) {
-      NodeT *temp = curr->next;
+      NodeTS *temp = curr->next;
       free(curr);
       curr = temp;
    }
@@ -40,11 +53,25 @@ int QueueIsEmpty(queue Q) {
    return (Q->length == 0);
 }
 
+int QueueLength(queue Q) {
+    int len = 0;
+    if (QueueIsEmpty(Q)) {
+        return len;
+    } else {
+        NodeTS *curr = Q->head;
+        while (curr != NULL) {
+            curr = curr->next;
+            len++;
+        }
+    }
+    return len;
+}
+
 // insert an int at end of queue
-void QueueEnqueue(queue Q, int v) {
-   NodeT *new = malloc(sizeof(NodeT));
+void QueueEnqueue(queue Q, stack s) {
+   NodeTS *new = malloc(sizeof(NodeTS));
    assert(new != NULL);
-   new->data = v;
+   new->stackData = s;
    new->next = NULL;
    if (Q->tail != NULL) {
       Q->tail->next = new;
@@ -57,15 +84,31 @@ void QueueEnqueue(queue Q, int v) {
 }
 
 // remove int from front of queue
-int QueueDequeue(queue Q) {
+stack QueueDequeue(queue Q) {
    assert(Q->length > 0);
-   NodeT *p = Q->head;
+   NodeTS *p = Q->head;
    Q->head = Q->head->next;
    if (Q->head == NULL) {
       Q->tail = NULL;
    }
    Q->length--;
-   int d = p->data;
+   stack s = p->stackData;
    free(p);
-   return d;
+   return s;
+}
+
+void QueuePrint(queue Q, int *arr) {
+  // int len = QueueLength(Q);
+  // printf("QueueLength3: %d\n", len);
+  NodeTS *curr = Q->head;
+  while (curr != NULL) {
+    stack s = curr->stackData;
+    // int len = StackLength(s);
+    // printf("before: %d\n", len);
+    stack c = StackConvert(s);
+    // len = StackLength(c);
+    // printf("after: %d\n", len);
+    StackPrint(c, arr);
+    curr = curr->next;
+  }
 }

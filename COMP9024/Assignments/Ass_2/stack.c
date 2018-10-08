@@ -1,9 +1,22 @@
 // Stack ADT implementation ... COMP9024 18s2
+// Edited by Lingxu Meng for COMP9024 18s2 assignment2
 
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include "stack.h"
+#include "queue.h"
+
+typedef struct stackNode {
+   stack stackData;
+   struct stackNode *next;
+} NodeTS;
+
+typedef struct QueueRep {
+   int   length;
+   NodeTS *head;
+   NodeTS *tail;
+} QueueRep;
 
 typedef struct node {
     int data;
@@ -74,15 +87,58 @@ int StackPop(stack S) {
     return d;
 }
 
-void StackPrint(stack S) {
+stack StackRemove(stack S) {
+    // assert(S->height > 0);
+    NodeT *head = S->top;
+    S->top = S->top->next;
+    S->height--;
+    free(head);
+    return S;
+}
+
+stack StackConvert(stack S) {
+    stack converted = newStack();
+    while (!StackIsEmpty(S)) {
+        int i = StackPop(S);
+        StackPush(converted, i);
+    }
+    return converted;
+}
+// copy given stack to a new stack
+stack CopyStack(stack S) {
+    stack temp1 = newStack();
+    stack temp2 = newStack();
+    stack copied = newStack();
+    int i;
+    while (!StackIsEmpty(S)) {
+        i = StackPop(S);
+        StackPush(temp1, i);
+        StackPush(temp2, i);
+    }
+    while (!StackIsEmpty(temp1)) {
+        i = StackPop(temp1);
+        StackPush(S, i);
+    }
+    while (!StackIsEmpty(temp2)) {
+        i = StackPop(temp2);
+        StackPush(copied, i);
+    }
+    dropStack(temp1);
+    dropStack(temp2);
+    return copied;
+}
+
+void StackPrint(stack S, int *arr) {
     int len = StackLength(S);
+    // printf("Stack Length: %d\n", len);
     NodeT *curr = S->top;
     int d = curr->data;
-    printf("%d", d);
+    printf("%d", arr[d]);
     while (len != 1) {
         curr = curr->next;
         d = curr->data;
-        printf(" < %d", d);
+        printf(" < %d", arr[d]);
         len--;
     }
+    printf("\n");
 }
