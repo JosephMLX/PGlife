@@ -7,9 +7,12 @@
 
 #include "WGraph.h"
 #include "stack.h"
+#include "queue.h"
 
 #define MAX_NODES 1000
 
+// For Stage 2 and after, all digits in x also occur in y
+// Time complexity: O(n), relative to the size of numbers
 bool isSubset(int i, int j) {
 	int digit_i[10] = {};
 	int digit_j[10] = {};
@@ -31,7 +34,8 @@ bool isSubset(int i, int j) {
 	}
 	return true;
 }
-// number of divisors of input
+// number of all divisors of input
+// Time complexity: O(n), relative to the size of number
 int divisor_num(int num) {		
 	int i;
 	int j = 0;
@@ -43,6 +47,7 @@ int divisor_num(int num) {
 	return j;
 }
 // list of all divisors of input
+// Time complexity: O(n), relative to the size of number
 int *divisor_list(int num, int len) {
 	int *arr;
 	int i;
@@ -57,7 +62,8 @@ int *divisor_list(int num, int len) {
 	}
 	return arr;
 }
-
+// Create a weighted graph to express the relation of the set
+// O(n^2): two nested for loops
 Graph divisor_Graph(int nodes, int *arr) {
 	Graph g = newGraph(nodes);
 	int i, j;
@@ -74,7 +80,7 @@ Graph divisor_Graph(int nodes, int *arr) {
 	}
 	return g;
 }
-
+// Main function for Task A, 
 void print_partial_order(Graph g, int i, int *arr) {
 	int nodes = numOfVertices(g);
 	int j;
@@ -88,39 +94,54 @@ void print_partial_order(Graph g, int i, int *arr) {
 }
 
 int main(int argc, char *argv[]) {
+	if (argc < 2) {
+		printf("Partial order:\n");
+		printf("\nLongest monotonically increasing sequences:\n");
+		return 0;
+	}
 	int num = atoi(argv[1]);
 	int nodes = divisor_num(num);
 	int *arr = divisor_list(num, nodes);
 	int nodeLength[nodes];
-	int i;
+	int i, j;
 	Graph g = divisor_Graph(nodes, arr);
 	printf("Partial order:\n");
 	for (i=0; i<nodes; i++) {
 		print_partial_order(g, i, arr);
-		nodeLength[i] = nodesHasLongestPath(g, i, nodes-1);
+		nodeLength[i] = 0;
 	}
 	printf("\nLongest monotonically increasing sequences:");
 	// showGraph(g);
-	int m = findMaxLength(g, nodes);
-	if (m == 0) {
-		for (i=0; i<nodes; i++) {
-			printf("\n%d", arr[i]);
+	printf("\n");
+	for (i=0; i<nodes; i++) {
+		for (j=i; j<nodes; j++) {
+			if (nodesHasLongestPath(g, i, j) > nodeLength[i]) {
+				nodeLength[i] = nodesHasLongestPath(g, i, j);
+			}
 		}
+	}
+
+	int maxPathLength = 0;
+	for (i=0; i<nodes; i++) {
+		// printf("nodelongestpath: %d\n", nodeLength[i]);
+		if (nodeLength[i] > maxPathLength)
+			maxPathLength = nodeLength[i];
+	}
+	// printf("maxPathLength: %d\n", maxPathLength);
+	if (maxPathLength == 0) {
+		for (i=0; i<nodes; i++) {
+			printf("%d\n", arr[i]);
+		}
+		return 0;
 	}
 	for (i=0; i<nodes; i++) {
-		if (nodeLength[i] == m) {
-			// printPath(g, i, nodes-1, arr);
-			stack s = recordPath(g, i, nodes-1, arr);
-			printf("\n");
-			StackPrint(s);
+	 	if (nodeLength[i] == maxPathLength) {
+	 		// printf("source node: %d\n", i);
+	 		queue q = bfsPathRecord(g, i, maxPathLength);
+			QueuePrint(q, arr);
+			dropQueue(q);
 		}
 	}
-	// StackPush(s, 25);
-	// StackPush(s, 5);
-	// printf("%d\n", StackLength(s));
-	// StackPrint(s);
-	
-	// printf("\n%d\n", findPathDFS(g, 0, 1));
 	free(arr);
 	freeGraph(g);
 	return 0;

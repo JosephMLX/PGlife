@@ -2,8 +2,12 @@
 
 typedef struct QueueRep *queue;
 
+typedef struct StackRep *stack;
+
 queue newQueue();               // set up empty queue
 void  dropQueue(queue);         // remove unwanted queue
 int   QueueIsEmpty(queue);      // check whether queue is empty
-void  QueueEnqueue(queue, int); // insert an int at end of queue
-int   QueueDequeue(queue);      // remove int from front of queue
+int   QueueLength(queue);		// caculate queue length
+void  QueueEnqueue(queue, stack); // insert an int at end of queue
+stack QueueDequeue(queue);      // remove int from front of queue
+void  QueuePrint(queue, int *);		// print all stacks in queue
