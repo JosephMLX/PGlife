@@ -1,4 +1,5 @@
 // Stack ADT implementation ... COMP9024 18s2
+// Edited by Lingxu Meng for COMP9024 18s2 assignment2
 
 #include <stdlib.h>
 #include <assert.h>
@@ -103,7 +104,7 @@ stack StackConvert(stack S) {
     }
     return converted;
 }
-
+// copy given stack to a new stack
 stack CopyStack(stack S) {
     stack temp1 = newStack();
     stack temp2 = newStack();

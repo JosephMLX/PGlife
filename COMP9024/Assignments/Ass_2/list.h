@@ -1,10 +1,13 @@
 // Linked list interface ... COMP9024 18s2
 #include <stdbool.h>
 
-typedef struct Node *List;
+typedef struct StackRep *stack;
 
-List insertLL(List, int);
-List deleteLL(List, int);
-bool inLL(List, int);
+typedef struct ListRep *List;
+
+List newLL();
+List insertLL(List, stack);
+List deleteLL(List, stack);
+bool inLL(List, stack);
 void freeLL(List);
 void showLL(List);

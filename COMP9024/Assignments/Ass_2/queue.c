@@ -1,4 +1,5 @@
 // Queue ADT implementation ... COMP9024 18s2
+// Edited by Lingxu Meng for COMP9024 18s2 assignment2
 
 #include <stdlib.h>
 #include <assert.h>

@@ -11,8 +11,20 @@
 
 #define MAX_NODES 1000
 
+/*
+	Task A: O(n) = n^2;
+	Travel from 1 to the input number, caculate the number of divisors and put all divisors into an array
+	Used two nested for-loops to determine whether all digits in x also occur in y and create the graph and print
+
+	Task B: O(n) = n^3;
+	Firstly, use dfs algorithm to record the longest path can start from each node, and get the longest path distance
+	of the whole graph, time complexity is O(n) = n^2 * n = n^3;
+	Then, use bfs algorithm to search paths has longest path from the nodes searched before, time complexity O(n) = n^3
+	each node has a queue to store all paths, use stack to store each path, finally, print each path in main function
+*/
+
 // For Stage 2 and after, all digits in x also occur in y
-// Time complexity: O(n), relative to the size of numbers
+// Time complexity: O(n) = n, relative to the size of numbers
 bool isSubset(int i, int j) {
 	int digit_i[10] = {};
 	int digit_j[10] = {};
@@ -35,7 +47,7 @@ bool isSubset(int i, int j) {
 	return true;
 }
 // number of all divisors of input
-// Time complexity: O(n), relative to the size of number
+// Time complexity: O(n) = n, relative to the size of number
 int divisor_num(int num) {		
 	int i;
 	int j = 0;
@@ -47,7 +59,7 @@ int divisor_num(int num) {
 	return j;
 }
 // list of all divisors of input
-// Time complexity: O(n), relative to the size of number
+// Time complexity: O(n) = n, relative to the size of number
 int *divisor_list(int num, int len) {
 	int *arr;
 	int i;
@@ -62,8 +74,8 @@ int *divisor_list(int num, int len) {
 	}
 	return arr;
 }
-// Create a weighted graph to express the relation of the set
-// O(n^2): two nested for loops
+// Create a weighted graph to express the relation of the set, weight of path = 1
+// O(n) = n^2, two nested for loops
 Graph divisor_Graph(int nodes, int *arr) {
 	Graph g = newGraph(nodes);
 	int i, j;
@@ -80,7 +92,7 @@ Graph divisor_Graph(int nodes, int *arr) {
 	}
 	return g;
 }
-// Main function for Task A, 
+// print the paths in the graph created
 void print_partial_order(Graph g, int i, int *arr) {
 	int nodes = numOfVertices(g);
 	int j;
@@ -100,9 +112,9 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	int num = atoi(argv[1]);
-	int nodes = divisor_num(num);
-	int *arr = divisor_list(num, nodes);
-	int nodeLength[nodes];
+	int nodes = divisor_num(num);			// divisor numbers
+	int *arr = divisor_list(num, nodes);	// divisor array
+	int nodeLength[nodes];					// the longest path starts from each node
 	int i, j;
 	Graph g = divisor_Graph(nodes, arr);
 	printf("Partial order:\n");
@@ -111,34 +123,23 @@ int main(int argc, char *argv[]) {
 		nodeLength[i] = 0;
 	}
 	printf("\nLongest monotonically increasing sequences:");
-	// showGraph(g);
 	printf("\n");
 	for (i=0; i<nodes; i++) {
 		for (j=i; j<nodes; j++) {
-			if (nodesHasLongestPath(g, i, j) > nodeLength[i]) {
-				nodeLength[i] = nodesHasLongestPath(g, i, j);
+			if (nodesHasLongestPath(g, i, j) > nodeLength[i]) {		
+				nodeLength[i] = nodesHasLongestPath(g, i, j);	// longest path distance can be started from each node
 			}
 		}
 	}
-
-	int maxPathLength = 0;
+	int maxPathLength = 0;					// the longest path distance in the graph
 	for (i=0; i<nodes; i++) {
-		// printf("nodelongestpath: %d\n", nodeLength[i]);
 		if (nodeLength[i] > maxPathLength)
 			maxPathLength = nodeLength[i];
 	}
-	// printf("maxPathLength: %d\n", maxPathLength);
-	if (maxPathLength == 0) {
-		for (i=0; i<nodes; i++) {
-			printf("%d\n", arr[i]);
-		}
-		return 0;
-	}
 	for (i=0; i<nodes; i++) {
-	 	if (nodeLength[i] == maxPathLength) {
-	 		// printf("source node: %d\n", i);
-	 		queue q = bfsPathRecord(g, i, maxPathLength);
-			QueuePrint(q, arr);
+	 	if (nodeLength[i] == maxPathLength) {				// select nodes that can begin a longest path
+	 		queue q = bfsPathRecord(g, i, maxPathLength);	// return all longest paths from this node as a queue
+			QueuePrint(q, arr);								// print all paths in the returned queue
 			dropQueue(q);
 		}
 	}

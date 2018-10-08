@@ -1,57 +1,71 @@
 // Linked list implementation ... COMP9024 18s2
 #include "list.h"
+#include "stack.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 typedef struct Node {
-   int         v;
+   stack  stackData;
    struct Node *next; 
 } Node;
 
-Node *makeNode(int n) {
+typedef struct ListRep {
+    int    length;
+    Node   *head;
+} ListRep;
+
+Node *makeNode(stack s) {
    Node *new = malloc(sizeof(Node));
    assert(new != NULL);
-   new->v = n;
+   new->stackData = s;
    new->next = NULL;
    return new;
 }
 
-List insertLL(List L, int n) {
-   if (inLL(L, n))
+List newLL() {
+    List L = malloc(sizeof(ListRep));
+    L->length = 0;
+    L->head = NULL;
+    return L;
+}
+
+List insertLL(List L, stack s) {
+   if (inLL(L, s))
       return L;
 
    // add new node at the beginning
-   Node *new = makeNode(n);
+   Node *new = makeNode(s);
    new->next = L;
    return new;
 }
 
-List deleteLL(List L, int n) {
+List deleteLL(List L, stack s) {
    if (L == NULL)
       return L;
-   if (L->v == n)
+   if (L->stackData == s)
       return L->next;
 
-   L->next = deleteLL(L->next, n);
+   L->next = deleteLL(L->next, s);
    return L;
 
 }
 
-bool inLL(List L, int n) {
+bool inLL(List L, stack s) {
    if (L == NULL)
       return false;
-   if (L->v == n)
+   if (L->stackData == s)
      return true;
 
-   return inLL(L->next, n);
+   return inLL(L->next, s);
 }
 
 void showLL(List L) {
    if (L == NULL)
       putchar('\n');
    else {
-      printf("%d ", L->v);
+      printf("123123\n");
+      // printf("%d ", L->stackData);
       showLL(L->next);
    }
 }

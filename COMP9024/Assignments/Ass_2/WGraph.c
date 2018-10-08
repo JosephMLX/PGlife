@@ -1,5 +1,6 @@
 // Weighted Directed Graph ADT
 // Adjacency Matrix Representation ... COMP9024 18s2
+// Edited by Lingxu Meng for COMP9024 18s2 assignment2
 #include "WGraph.h"
 #include "queue.h"
 #include "stack.h"
@@ -101,26 +102,28 @@ void showGraph(Graph g) {
 	  if (g->edges[i][j] != 0)
 	     printf("Edge %d - %d: %d\n", i, j, g->edges[i][j]);
 }
+/* not used function
 
-int findMaxLength(Graph g, int nV) {
-  int i, j;
-  int maxDistance[nV];
-  for (i=0; i<nV; i++) {
-    maxDistance[i] = 0;
-  }
-  int max_path_length = 0;
-  for (i = 0; i < nV; i++) {
-    for (j = i + 1; j < nV; j++) {
-      if (adjacent(g, i, j) && maxDistance[j] <= maxDistance[i] + 1) {
-        maxDistance[j] = maxDistance[i] + 1;
-        if (maxDistance[j] > max_path_length) {
-          max_path_length = maxDistance[j];
-        }
-      }
-    }
-  }
-  return max_path_length;
-}
+// int findMaxLength(Graph g, int nV) {
+//   int i, j;
+//   int maxDistance[nV];
+//   for (i=0; i<nV; i++) {
+//     maxDistance[i] = 0;
+//   }
+//   int max_path_length = 0;
+//   for (i = 0; i < nV; i++) {
+//     for (j = i + 1; j < nV; j++) {
+//       if (adjacent(g, i, j) && maxDistance[j] <= maxDistance[i] + 1) {
+//         maxDistance[j] = maxDistance[i] + 1;
+//         if (maxDistance[j] > max_path_length) {
+//           max_path_length = maxDistance[j];
+//         }
+//       }
+//     }
+//   }
+//   return max_path_length;
+// }
+*/
 
 int dfsPathCheck(Graph g, Vertex v, Vertex dest, int *visited) {
   Vertex w;
