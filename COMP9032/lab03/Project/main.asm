@@ -87,9 +87,6 @@ jmp pressButton
 	cbi PORTC, (7-@0)		; clear bit in PORTC to turn off this LED
 .endmacro
 
-.macro  dim_light
-.endmacro
-
 .macro lcd_set
 	sbi PORTA, @0
 .endmacro
@@ -167,6 +164,7 @@ pressButton:
 	turn_on_led 0	; bright three LEDs
 	turn_on_led 1	;
 	turn_on_led 2	;
+	;call cup_leds_dimmed_light
     in r16, EIMSK
 	andi r16, 0				; disable interrupt 0
 	out EIMSK, r16
@@ -178,6 +176,7 @@ pressButton:
 		turn_on_led 0	; bright three LEDs
 		turn_on_led 1	;
 		turn_on_led 2	;
+		;call cup_leds_dimmed_light
 		;TODO, dimmed light
         do_lcd_command 0b00000001
         do_lcd_data 'S'
@@ -227,12 +226,15 @@ readKeypadValue:
 	breq bright2				;
 	bright0:					;
 		turn_on_led 0			; turn on the led with ball in
+		call sleep_1s
 		rjmp change_score		;
 	bright1:					;
-		turn_on_led 1			;
+		turn_on_led 1	
+		call sleep_1s			;
 		rjmp change_score		;
 	bright2:					;	
 		turn_on_led 2			;
+		call sleep_1s
 	change_score:					; if guess correctly, score += 1, otherwise, score -= 1; if score = 0, restart from pressButton
 		cp temp1, r16				; compare temp1 with r16 (keypad value and random number)
 		breq inc_score				; correct guess, get score
@@ -242,8 +244,11 @@ readKeypadValue:
 			cpi score, 0			; if score is already 0
 			breq gameover			; gameover, start another game
 			dec score				; otherwise, score = score - 1
+			cpi score, 0			; if score is already 0
+			breq gameover			; gameover, start another game
 			call display_score
 			jmp readKeypadValue
+			;jmp pressButton
 			gameover:
 				call display_score
 				clr gameStatus		; score is 0, go back to initial start status
@@ -260,6 +265,7 @@ readKeypadValue:
 			inc score				; score = score + 1
 			call display_score
 			jmp readKeypadValue
+			;jmp pressButton
 
 
 ; Send a command to the LCD (r16)
@@ -383,6 +389,37 @@ turn_off_indicator:
 	turn_off_led 7
 	ret
 
+turn_on_all_cup_leds:
+	turn_on_led 0	; bright three LEDs
+	turn_on_led 1	;
+	turn_on_led 2	;
+	ret
+
+turn_off_all_cup_leds:
+	turn_off_led 0	; bright three LEDs
+	turn_off_led 1	;
+	turn_off_led 2	;
+	ret
+
+cup_leds_dimmed_light:
+	rcall turn_on_all_cup_leds
+	nop
+	nop
+	rcall turn_off_all_cup_leds
+	nop
+	nop
+	rcall turn_on_all_cup_leds
+	nop
+	nop
+	rcall turn_off_all_cup_leds
+	nop
+	nop
+	rcall turn_on_all_cup_leds
+	nop
+	nop
+	rcall turn_off_all_cup_leds
+	ret
+
 ; a subroutine to display score on LCD 
 display_score:
 	do_lcd_command 0b00000001
@@ -403,10 +440,11 @@ display_score:
 
 ; subroutine used to generate a number(0, 1, 2) as the correct cup position
 mod3:
-	sb3:
+	minus3:
 	subi temp1, 3		; temp -= 3
 	cpi temp1, 3		
-	brsh sb3			; if temp >=3, continue the loop
+	brsh minus3			; if temp >=3, continue the loop
+	call sleep_5ms
 	ret
 
 ; a subroutine to read in from KEYPAD (lab04-task01)
@@ -423,7 +461,7 @@ keypad:
     dec temp1
     brne delay
 
-    in	temp1, PINF				; read PORTD
+    in	temp1, PINF				; read PORTF
     andi temp1, ROWMASK
     cpi temp1, 0xF				; check if any rows are on
     breq nextcol
