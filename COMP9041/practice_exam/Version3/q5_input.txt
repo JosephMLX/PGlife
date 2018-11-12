@@ -1,0 +1,6 @@
+fred 3
+mary 7
+fred 2
+john 4
+mary 1
+fred 4
