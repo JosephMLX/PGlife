@@ -1,0 +1,9 @@
+-rwxr-xr-x 1 lc lc   174 11月  7 22:07 gcd.pl
+-rwxr-xr-x 1 lc lc   211 11月  7 23:22 q14.pl
+-rwxr-xr-x 1 lc lc   321 11月  8 19:56 q16.pl
+-rwxrwxrwx 1 lc lc    83 11月  6 22:51 q1.pl
+-rwxr-xr-x 1 lc lc    54 11月  6 23:07 q4.pl
+-rwxr-xr-x 1 lc lc    95 11月  6 23:26 q5.pl
+-rwxr-xr-x 1 lc lc   101 11月  6 23:40 q6.pl
+-rwxr-xr-x 1 lc lc   118 11月  6 23:51 q7.pl
+-rwxr-xr-x 1 lc lc    99 11月  7 00:06 q9.pl

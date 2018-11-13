@@ -1,0 +1,11 @@
+add
+This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. 
+#此命令将要提交的文件的信息添加到索引库中(将修改添加到暂存区)，以准备为下一次提交分段的内容。
+
+push
+Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+#使用本地引用更新远程引用，同时发送完成给定引用所需的对象。可以在每次推入存储库时，通过在那里设置挂钩触发一些事件。
+
+commit
+Stores the current contents of the index in a new commit along with a log message from the user describing the changes.
+#将索引的当前内容与描述更改的用户和日志消息一起存储在新的提交中。

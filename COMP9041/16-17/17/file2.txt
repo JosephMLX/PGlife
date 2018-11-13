@@ -1,0 +1,6 @@
+-rwxrwxrwx 1 lc lc   188 11月  7 22:17 q11.py
+-rwxr-xr-x 1 lc lc   377 11月  7 23:42 q15.py
+-rwxr-xr-x 1 lc lc   366 11月  8 20:21 q17.py
+-rwxr-xr-x 1 lc lc   331 11月  8 20:58 q18.py
+-rwxr-xr-x 1 lc lc   188 11月  8 21:04 q19.py
+-rw-r--r-- 1 lc lc 12288 11月  8 21:04 .q19.py.swp
