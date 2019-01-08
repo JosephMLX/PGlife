@@ -52,6 +52,7 @@ def get_google_sheet(spreadsheet_id, range_name):
     """
     return result
 
+
 def gsheet2df(gsheet):
     header = gsheet.get('values', [])[0]
     values = gsheet.get('values', [])[1:]
@@ -59,14 +60,15 @@ def gsheet2df(gsheet):
         print('No data found.')
     else:
         all_data = []
-	for col_id, col_name in enumerate(header):
-	    column_data = []
-	    for row in values:
-		column_data.append(row[col_id])
-	    ds = pd.Series(data=column_data, name=col_name)
-	    all_data.append(ds)
-	df = pd.concat(all_data, axis=1)
-	return df
+    for col_id, col_name in enumerate(header):
+        column_data = []
+        for row in values:
+            column_data.append(row[col_id])
+        ds = pd.Series(data=column_data, name=col_name)
+        all_data.append(ds)
+    df = pd.concat(all_data, axis=1)
+    return df
+
 
 if __name__ == '__main__':
     gsheet = get_google_sheet(SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME)
