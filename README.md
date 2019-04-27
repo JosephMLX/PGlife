@@ -1,6 +1,6 @@
-# UNSW 18S1
+> coding notes, labs, quizes
 
-coding notes, labs, quizes
+# UNSW 18S1
 
 -- COMP9021<br>
 -- COMP9311<br>
@@ -9,7 +9,13 @@ coding notes, labs, quizes
 
 # UNSW 18S2
 
--- COMP9041<br>
+-- COMP9041/2041
 -- COMP9032<br>
 -- COMP9321<br>
 -- COMP9024
+
+# UNSW 19T1
+
+-- COMP9318
+-- COMP9102/3131
+-- COMP9201/3231
