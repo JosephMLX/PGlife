@@ -29,9 +29,6 @@ var/
 *.egg
 
 # Jupyter Notebook
-*.ipynb_checkpoints
-*/.ipynb_checkpoints/*
-*.ipynb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
