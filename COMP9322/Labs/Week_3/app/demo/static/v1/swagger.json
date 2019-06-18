@@ -1,0 +1,83 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This service is used for managing students of a course and their marks",
+    "version": "0.0.1",
+    "title": "Course Management System"
+  },
+  "basePath": "/v1",
+  "consumes": [
+    "application/json",
+    "application/xml"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "paths": {
+    "/students": {
+      "get": {
+        "description": "this is used for returning a list of students",
+        "summary": "get students",
+        "parameters": [
+          {
+            "name": "sort",
+            "type": "string",
+            "in": "query",
+            "default": "+name"
+          },
+          {
+            "name": "Accept",
+            "type": "string",
+            "in": "header",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/students"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "create a student",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "student",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/students"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "students": {
+      "type": "object",
+      "properties": {
+        "zid": {
+          "type": "string",
+          "example": "z1234567"
+        },
+        "name": {
+          "type": "string",
+          "example": "Geralt of Rivia"
+        }
+      }
+    }
+  }
+}
