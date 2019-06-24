@@ -113,6 +113,7 @@ paths:
           required: true
           type: "string"
       responses:
+        // some suggestions using 204 when delete resources
         204:
           description: Order Cancelled
         400:
