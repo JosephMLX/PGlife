@@ -2,6 +2,8 @@ package assignment1;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -30,10 +32,22 @@ public class Assignment1 {
 		public void map(Object key, Text value, Context context
                  ) throws IOException, InterruptedException {
 			StringTokenizer itr = new StringTokenizer(value.toString());
+			System.out.println(itr.countTokens());
+			List<String> tokens = new ArrayList<String>();
+			int tokensCount = itr.countTokens();
+			int i = 0;
 			while (itr.hasMoreTokens()) {
-				word.set(itr.nextToken());
+				tokens.add(itr.nextToken());
+			}
+			for (String token: tokens) {
+				System.out.println(token);
+				word.set(token);
 				context.write(word, one);
 			}
+			// while (itr.hasMoreTokens()) {
+			// 	word.set(itr.nextToken());
+			// 	context.write(word, one);
+			// }
 		}
 	}
 	
