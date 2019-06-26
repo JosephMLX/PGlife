@@ -13,6 +13,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -38,15 +39,18 @@ public class Assignment1 {
 			List<String> tokens = new ArrayList<String>();
 			int tokensCount = itr.countTokens();
 			int index = 0;
-			int len = 2;
+			int ngram = Integer.valueOf(context.getConfiguration().get("ngram"));
+			FileSplit fileSplit = (FileSplit)context.getInputSplit();
+			String filename = fileSplit.getPath().getName();
+			// System.out.println(filename);
 			while (itr.hasMoreTokens()) {
 				tokens.add(itr.nextToken());
 			}
 			// slide the ArrayList for getting n-gram phrase
-			while (index <= tokensCount - len) {
+			while (index <= tokensCount - ngram) {
 				String sb = "";
 				List<String> sa = new ArrayList<String>();
-				for (int i = index; i < index + len; i++) {
+				for (int i = index; i < index + ngram; i++) {
 					sa.add(tokens.get(i));
 				}
 				sb = String.join(" ", sa);
@@ -77,15 +81,38 @@ public class Assignment1 {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
+		/*
+		 * args[0]: The value N for the ngram. For example, if the user is 
+		 * 			interested only in bigrams, then args[0]=2.
+		 * args[1]: The minimum count for an ngram to be included in the 
+		 * 			output file. For example, if the user is interested 
+		 * 			only in ngrams that appear at least 10 times across 
+		 * 			the whole set of documents, then args[1]=10.
+		 */
+		Integer ngram = Integer.valueOf(args[0]);
+		Integer minCount = Integer.valueOf(args[1]);
+		/* 
+		 * set args[0] & args[1] as parameter for configuration, map and reduce 
+		 * can get them 
+		*/
+		conf.setInt("ngram", ngram);
+		conf.setInt("minCount", minCount);
 		Job job = Job.getInstance(conf, "word count");
-		String source = args[0];
-		String dest = args[1];
+		/*
+		 * args[2]: The directory containing the files in input. 
+		 * 			For example, args[2]=”/tmp/input/”
+		 * args[3]: The directory where the output file will be stored. 
+		 * 			For example, args[3]=”/tmp/output/”
+		 */
+		String source = args[2];
+		String dest = args[3];
 		FileSystem fs = FileSystem.get(conf);
 		Path in =new Path(source);
-        Path out =new Path(dest);
+		Path out =new Path(dest);
+		// delete output dir if it exists for convinient
         if (fs.exists(out)) {
             fs.delete(out, true);
-        }
+		}
 		job.setMapperClass(TokenizerMapper.class);
 		job.setCombinerClass(IntSumReducer.class);
 		job.setJarByClass(Assignment1.class);
@@ -94,8 +121,6 @@ public class Assignment1 {
 		job.setOutputValueClass(IntWritable.class);
 		FileInputFormat.addInputPath(job, in);
 		FileOutputFormat.setOutputPath(job, out);
-		// FileInputFormat.addInputPath(job, new Path("/import/glass/3/z5147810/Desktop/PGlife/COMP9313/Assignment/Assignment1/input"));
-		// FileOutputFormat.setOutputPath(job, new Path("output"));
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
 }
