@@ -68,14 +68,17 @@ public class Assignment1 {
 		public void reduce(Text key, Iterable<IntWritable> values, Context context)
 				throws IOException, InterruptedException {
 			int sum = 0;
+			int minCount = Integer.valueOf(context.getConfiguration().get("minCount"));
 			for (IntWritable val : values) {
 				sum += val.get();
 			}
-			// System.out.println("sum" + sum);
-			result.set(sum);
-			// System.out.println("key" + key.toString());
-			// System.out.println("result" + result);
-			context.write(key, result);
+			System.out.println(minCount);
+			if (sum >= minCount) {
+				result.set(sum);
+				// System.out.println("key" + key.toString());
+				// System.out.println("result" + result);
+				context.write(key, result);
+			}
 		}
 	}
 
@@ -109,6 +112,14 @@ public class Assignment1 {
 		FileSystem fs = FileSystem.get(conf);
 		Path in =new Path(source);
 		Path out =new Path(dest);
+		// if input arguments number is not four, raise an exception
+		try {
+			if (args.length != 4) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// delete output dir if it exists for convinient
         if (fs.exists(out)) {
             fs.delete(out, true);
