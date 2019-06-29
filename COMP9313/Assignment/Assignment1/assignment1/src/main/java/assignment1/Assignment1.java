@@ -72,13 +72,12 @@ public class Assignment1 {
 			for (IntWritable val : values) {
 				sum += val.get();
 			}
-			System.out.println(minCount);
-			if (sum >= minCount) {
-				result.set(sum);
-				// System.out.println("key" + key.toString());
-				// System.out.println("result" + result);
-				context.write(key, result);
-			}
+			System.out.println("key: "+key+"\n" + "sum:"+sum);
+			// System.out.println(minCount);
+			result.set(sum);
+			// System.out.println("key" + key.toString());
+			// System.out.println("result" + result);
+			context.write(key, result);
 		}
 	}
 
