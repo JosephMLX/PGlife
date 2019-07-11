@@ -1,0 +1,24 @@
+1. MATCH (p:Person),(m:Movie) WHERE (p:Person)-[:ACTED_IN]->(m:Movie) and (p:Person)-[:DIRECTED]->(m:Movie) RETURN p, m
+2. MATCH (p:Person),(m:Movie) WHERE m.released > 2010 RETURN p.name, m
+3. MATCH (p:Person),(m:Movie) WHERE (p:Person)-[:ACTED_IN]->(m:Movie) and m.title = "Apollo 13" RETURN m.released - avg(p.born)
+4. CREATE (CaptainMarvel:Movie {title:'Captain Marvel', released:2019, tagline:'Carol Danvers becomes one of the universe's most powerful heroes when Earth is caught in the middle of a galactic war between two alien races.'})
+   CREATE (Brie:Person {name:'Brie Larson', born:1989})
+   CREATE (Samuel:Person {name:'Samuel L. Jackson', born:1967})
+   CREATE (Ben:Person {name:'Ben Mendelsohn', born:1948})
+   CREATE (Anna:Person {name:'Anna Boden', born:1979})
+   CREATE
+        (Brie)-[:ACTED_IN {roles:['Carol Danvers / Vers / Captain Marvel']}]->(CaptainMarvel),
+        (Samuel)-[:ACTED_IN {roles:['Nick Fury']}]->(CaptainMarvel),
+        (Ben)-[:ACTED_IN {roles:['Talos / Keller']}]->(CaptainMarvel),
+        (Anna)-[:DIRECTED]->(CaptainMarvel),
+5. MATCH (p:Person)-[rel*]->(m:Movie) 
+    WITH collect(rel) AS allr 
+    RETURN Reduce(allDistR =[], rcol IN allr | 
+              reduce(distR = allDistR, r IN rcol | 
+                     distR +  CASE WHEN type(r) IN distR  THEN []  ELSE type(r) END 
+                    )
+              )
+6. MATCH (p:Person),(m:Movie) WHERE (p:Person)-[:DIRECTED]->(m:Movie) RETURN DISTINCT(p.name)
+7. MATCH ()-[r]->() RETURN count(r) as count
+8. MATCH ()-[r]->() DELETE r
+9. MATCH (n) DETACH DELETE n
