@@ -1,0 +1,361 @@
+swagger: "2.0"
+info:
+  description: "This service is used for managing orders in a coffee shop scenario in COMP9322 T2 Assignment 1"
+  version: "1.0.0"
+  title: "Coffee Shop Management System"
+host: "scarbucks.example.com.au"
+basePath: "/v2"
+schemes:
+  - http
+  - https
+consumes: 
+  - application/json
+  - application/xml
+produces: 
+  - application/json
+  - application/xml
+tags: 
+  - name: "orders"
+    description: "A life of an coffee order, cashier help customer to create/cancel/amend/check an order"
+  - name: "payments"
+    description: "All implementations about payments, cashier help customer to finish merchandise"
+  - name: "types"
+    description: "All types of coffees & addtitions offered by the coffee shop, cashier can show the customer inneed"
+paths:
+  /orders:
+    post:
+      tags:
+        - "orders"
+      summary: "Creating Order"
+      description: "Creating an order for question 1"
+      parameters:
+        - in: body
+          name: order
+          schema:
+            type: object
+            $ref: '#/definitions/orders'
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/orders_response'
+        400:
+          description: Bad Request
+  
+  /orders/{orderId}:
+    get:
+      tags:
+        - "orders"
+      summary: "Getting Order Details"
+      description: "Get details of an order for question 2"
+      operationId: "getDetailsById"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          description: "ID of order to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/orders_response"
+        400:
+          description: Invilid ID supplied
+        404:
+          description: ID Not Found
+          
+    put:
+      tags:
+        - "orders"
+      summary: "Amending Order"
+      description: "Amend an order for question 3"
+      operationId: "amendDetailsById"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          description: "ID of order to amend"
+          required: true
+          type: "string"
+        - name: "taste"
+          in: "body"
+          description: "Customized order taste"
+          required: true
+          schema:
+            $ref: "#/definitions/orders"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/orders_response"
+        400:
+          description: Invilid ID supplied
+        404:
+          description: ID Not Found
+      
+    delete:
+      tags:
+        - "orders"
+      summary: "Cancelling Order"
+      description: "Cancel an order for question 4"
+      operationId: "cancelOrder"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          description: "The ID that needs to be cancelled"
+          required: true
+          type: "string"
+      responses:
+        204:
+          description: Order Cancelled
+          schema:
+            $ref: "#/definitions/order_links"
+        400:
+          description: Invilid ID supplied
+        404:
+          description: ID Not Found
+          
+  /orders/{orderId}/:
+    post:
+      tags:
+        - "payments"
+      summary: "Creating a Payment"
+      description: "Create a payment of an order for question 5"
+      operationId: "paymentOrder"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          description: "The ID that needs to be cancelled"
+          required: true
+          type: "string"
+        - in: body
+          name: payment
+          schema:
+            type: object
+            $ref: '#/definitions/payment'
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: "#/definitions/payment_response"
+        400:
+          description: Bad Request
+  
+  /orders/{orderId}/payments/{paymentId}:
+    get:
+      tags:
+        - "payments"
+      summary: "Getting Payment Details for an Order"
+      description: "Get payment of an order for question 6"
+      operationId: "paymentDetailId"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "paymentId"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/payment_response"
+        400:
+          description: Invilid ID supplied
+        404:
+          description: ID Not Found
+  
+  /types:
+    get:
+      tags:
+        - "types"
+      summary: "Getting Payment Details for an Order"
+      description: "Get payment of an order for question 6"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/coffee"
+      
+        
+          
+          
+# securityDefinitions:
+#   petstore_auth:
+#     type: "oauth2"
+#     authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+#     flow: "implicit"
+#     scopes:
+#       write:pets: "modify pets in your account"
+#       read:pets: "read your pets"
+#   api_key:
+#     type: "apiKey"
+#     name: "api_key"
+#     in: "header"
+definitions:
+  orders:
+    type: object
+    properties:
+      shopId:
+        type: integer
+        example: 10001
+        description: "ID of current shop"
+      orderTime:
+        type: string
+        example: "2019-06-17-16-25-43"
+        description: "Time making this order"
+      cashierId:
+        type: integer
+        example: 087757
+        description: "ID of cashier creating this order"
+      orderId:
+        type: string
+        example: "O1000120190617162543087757"
+        description: "Unique ID of an order, format: (O + shopId + orderTime + cashierId)"
+      coffeeType:
+        type: string
+        example: "Latte"
+        description: "Coffee type in this order"
+      taste:
+        type: string
+        example: "skimmed milk"
+        description: "Customized taste in this order"
+      price:
+        type: number
+        example: 4.99
+        description: "Order price"
+      hasPaid:
+        type: boolean
+        example: false
+        description: "Has customer paid this order"
+  orders_response:
+    type: object
+    properties:
+      shopId:
+        type: integer
+        example: 10001
+        description: "ID of current shop"
+      orderTime:
+        type: string
+        example: "2019-06-17-16-25-43"
+        description: "Time making this order"
+      cashierId:
+        type: integer
+        example: 087757
+        description: "ID of cashier creating this order"
+      orderId:
+        type: string
+        example: "O1000120190617162543087757"
+        description: "Unique ID of an order, format: (O + shopId + orderTime + cashierId)"
+      coffeeType:
+        type: string
+        example: "Latte"
+        description: "Coffee type in this order"
+      taste:
+        type: string
+        example: "skimmed milk"
+        description: "Customized taste in this order"
+      price:
+        type: number
+        example: 4.99
+        description: "Order price"
+      hasPaid:
+        type: boolean
+        example: false
+        description: "Has customer paid this order"
+      links:
+        $ref: '#/definitions/order_links'
+  payment:
+    type: object
+    properties:
+      orderID:
+        type: string
+        example: "O1000120190617162543087757"
+        description: "Same as ID of order needs to be paid, used to locate the order"
+      paymentMethod:
+        type: string
+        example: "cash"
+        description: "Payment method: cash, credit card or others"
+      paymentTime:
+        type: string
+        example: "2019-06-17-16-27-13"
+        description: "Time of payment"
+      paymentId:
+        type: string
+        example: "P1000120190617162713087757"
+        description: "Unique ID of a payment, format: (P + shopId + paymentTime + cashierId)"
+  payment_response:
+    type: object
+    properties:
+      orderID:
+        type: string
+        example: "O1000120190617162543087757"
+        description: "Same as ID of order needs to be paid, used to locate the order"
+      paymentMethod:
+        type: string
+        example: "cash"
+        description: "Payment method: cash, credit card or others"
+      paymentTime:
+        type: string
+        example: "2019-06-17-16-27-13"
+        description: "Time of payment"
+      paymentId:
+        type: string
+        example: "P1000120190617162713087757"
+        description: "Unique ID of a payment, format: (P + shopId + paymentTime + cashierId)"
+      links:
+        $ref: '#/definitions/payment_links'
+  coffee:
+    type: object
+    properties:
+      coffeeType:
+        type: string
+        example: "Espresso, Cappuccino, Latte, Caffè Americano"
+      additions:
+        type: string
+        example: "sugar, slim milk, "
+  order_links:
+    type: object
+    properties:
+      rel:
+        type: string
+        example: "self"
+      action:
+        type: string
+        example: "GET"
+      href:
+        type: string
+        example: "/orders/"
+      type:
+        type: string
+        example: "[application/json]"
+  payment_links:
+    type: object
+    properties:
+      rel:
+        type: string
+        example: "self"
+      action:
+        type: string
+        example: "GET"
+      href:
+        type: string
+        example: "/orders/{ordersID}/payments/"
+      type:
+        type: string
+        example: "[application/json]"
+      

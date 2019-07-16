@@ -1,0 +1,63 @@
+@prefix ns1: <http://www.semprog.com/film#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:blade_runner a ns1:Film ;
+    ns1:directedBy ns1:ridley_scott ;
+    ns1:name "Blade Runner"^^xsd:string ;
+    ns1:starring ns1:bl_performance .
+
+ns1:directedBy a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Film ;
+    rdfs:range ns1:Director .
+
+ns1:hasActor a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Performance ;
+    rdfs:range ns1:Actor .
+
+ns1:hasRole a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Performance ;
+    rdfs:range ns1:Role .
+
+ns1:name a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Object ;
+    rdfs:range xsd:string .
+
+ns1:starring a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Film ;
+    rdfs:range ns1:Performance .
+
+ns1:bl_performance a ns1:Performance ;
+    ns1:hasActor ns1:harrison_ford ;
+    ns1:hasRole ns1:rick_deckard .
+
+ns1:harrison_ford a ns1:Actor ;
+    ns1:name "Harrison Ford"^^xsd:string .
+
+ns1:rick_deckard a ns1:Role ;
+    ns1:name "Rick Deckard"^^xsd:string .
+
+ns1:ridley_scott a ns1:Director ;
+    ns1:name "Ridley Scott"^^xsd:string .
+
+ns1:Actor a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Person .
+
+ns1:Director a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Person .
+
+ns1:Person a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Role a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Film a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Object a <http://www.w3.org/2002/07/owl#Class> .
+
+ns1:Performance a <http://www.w3.org/2002/07/owl#Class> .
+

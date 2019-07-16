@@ -1,0 +1,42 @@
+@prefix ns1: <http://www.modrisco.github.io/pet#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:Apartment_Friendly a ns1:Tag ;
+    ns1:sub_class_of ns1:Category .
+
+ns1:Brownie a ns1:Pet ;
+    ns1:name "Brownie"^^xsd:string .
+
+ns1:Categoty a <http://www.w3.org/2002/07/owl#Class> .
+
+ns1:Order a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:User a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:categoty_of_pet a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Pet ;
+    rdfs:range ns1:Category .
+
+ns1:name a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Object ;
+    rdfs:range xsd:string .
+
+ns1:sub_class_of a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Tag ;
+    rdfs:range ns1:Category .
+
+ns1:Pet a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Tag a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Category .
+
+ns1:Category rdfs:subClassOf ns1:Object .
+
+ns1:Object a <http://www.w3.org/2002/07/owl#Class> .
+

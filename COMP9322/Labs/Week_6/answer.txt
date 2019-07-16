@@ -11,13 +11,7 @@
         (Samuel)-[:ACTED_IN {roles:['Nick Fury']}]->(CaptainMarvel),
         (Ben)-[:ACTED_IN {roles:['Talos / Keller']}]->(CaptainMarvel),
         (Anna)-[:DIRECTED]->(CaptainMarvel),
-5. MATCH (p:Person)-[rel*]->(m:Movie) 
-    WITH collect(rel) AS allr 
-    RETURN Reduce(allDistR =[], rcol IN allr | 
-              reduce(distR = allDistR, r IN rcol | 
-                     distR +  CASE WHEN type(r) IN distR  THEN []  ELSE type(r) END 
-                    )
-              )
+5. MATCH (a)-[r]->(b) RETURN DISTINCT(type(r))
 6. MATCH (p:Person),(m:Movie) WHERE (p:Person)-[:DIRECTED]->(m:Movie) RETURN DISTINCT(p.name)
 7. MATCH ()-[r]->() RETURN count(r) as count
 8. MATCH ()-[r]->() DELETE r
