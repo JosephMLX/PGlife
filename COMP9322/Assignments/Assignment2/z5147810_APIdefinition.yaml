@@ -328,6 +328,15 @@ definitions:
       additions:
         type: string
         example: "sugar, slim milk, "
+  person:
+    type: object
+    properties:
+      role:
+        type: string
+        example: "customer, server, manager"
+      name:
+        type: string
+        example: "Jim, Tom, Liam"
   order_links:
     type: object
     properties:

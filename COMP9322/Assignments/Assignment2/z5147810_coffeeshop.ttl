@@ -1,0 +1,157 @@
+@prefix ns1: <http://www.scarbucks.example.com.au/v2/coffee#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190720090000> a ns1:Order ;
+    ns1:order_id "20190720090000"^^xsd:string ;
+    ns1:ordered_at "2019-07-20T09:00:00"^^xsd:dateTime ;
+    ns1:ordered_for ns1:Latte ;
+    ns1:owned_by ns1:jim_hay ;
+    ns1:servered_by ns1:steve_roges .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190720091000> a ns1:Payment ;
+    ns1:deal_with ns1:black_widow ;
+    ns1:payment_id "20190720091000"^^xsd:string .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190720190000> a ns1:Order ;
+    ns1:order_id "20190720190000"^^xsd:string ;
+    ns1:ordered_at "2019-07-20T19:00:00"^^xsd:dateTime ;
+    ns1:ordered_for ns1:Espresso ;
+    ns1:owned_by ns1:ed_sheeran ;
+    ns1:servered_by ns1:steve_roges .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190720191000> ns1:payment_id "20190720191000"^^xsd:string .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190721190000> a ns1:Order ;
+    ns1:order_id "20190721090000"^^xsd:string ;
+    ns1:ordered_at "2019-07-21T19:00:00"^^xsd:dateTime ;
+    ns1:ordered_for ns1:Latte ;
+    ns1:owned_by ns1:jim_hay .
+
+<http://www.scarbucks.example.com.au/v2/coffee#20190721191000> ns1:payment_id "20190721091000"^^xsd:string .
+
+ns1:barista_report_to a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Barista ;
+    rdfs:range ns1:Manager .
+
+ns1:bname a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Barista ;
+    rdfs:range xsd:string .
+
+ns1:caname a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Cashier ;
+    rdfs:range xsd:string .
+
+ns1:cappuccino a ns1:Coffee ;
+    ns1:price_at "7.2"^^xsd:float ;
+    ns1:type "Cappuccino"^^xsd:string .
+
+ns1:cashier_report_to a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Cashier ;
+    rdfs:range ns1:Manager .
+
+ns1:cuname a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Customer ;
+    rdfs:range xsd:string .
+
+ns1:deal_with a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Payment ;
+    rdfs:range ns1:Cashier .
+
+ns1:espresso a ns1:Coffee ;
+    ns1:price_at "8.5"^^xsd:float ;
+    ns1:type "Espresso"^^xsd:string .
+
+ns1:latte a ns1:Coffee ;
+    ns1:price_at "9.8"^^xsd:float ;
+    ns1:type "Latte"^^xsd:string .
+
+ns1:mname a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Manager ;
+    rdfs:range xsd:string .
+
+ns1:order_id a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Order ;
+    rdfs:range xsd:string .
+
+ns1:ordered_at a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Order ;
+    rdfs:range xsd:dateTime .
+
+ns1:ordered_for a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Order ;
+    rdfs:range xsd:string .
+
+ns1:owned_by a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Order ;
+    rdfs:range ns1:Customer .
+
+ns1:paid_at a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Payment ;
+    rdfs:range xsd:dateTime .
+
+ns1:paid_for a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Payment ;
+    rdfs:range ns1:Order .
+
+ns1:payment_id a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Payment ;
+    rdfs:range xsd:string .
+
+ns1:price_at a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Coffee ;
+    rdfs:range xsd:float .
+
+ns1:servered_by a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    rdfs:domain ns1:Order ;
+    rdfs:range ns1:Barista .
+
+ns1:type a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+    rdfs:domain ns1:Coffee ;
+    rdfs:range xsd:string .
+
+ns1:black_widow a ns1:Cashier ;
+    ns1:caname "Natasha"^^xsd:string ;
+    ns1:cashier_report_to ns1:tony_stark .
+
+ns1:ed_sheeran a ns1:Customer ;
+    ns1:cuname "Ed Sheeran"^^xsd:string .
+
+ns1:jim_hay a ns1:Customer ;
+    ns1:cuname "Jim Hay"^^xsd:string .
+
+ns1:steve_roges a ns1:Barista ;
+    ns1:barista_report_to ns1:tony_stark ;
+    ns1:bname "Steve Roges"^^xsd:string .
+
+ns1:tony_stark a ns1:Manager ;
+    ns1:mname "Tony Stark"^^xsd:string .
+
+ns1:Employee a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Barista a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Employee .
+
+ns1:Cashier a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Employee .
+
+ns1:Customer a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Manager a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Employee .
+
+ns1:Coffee a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Object a <http://www.w3.org/2002/07/owl#Class> .
+
+ns1:Payment a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
+ns1:Order a <http://www.w3.org/2002/07/owl#Class> ;
+    rdfs:subClassOf ns1:Object .
+
