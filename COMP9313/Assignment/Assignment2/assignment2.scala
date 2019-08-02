@@ -13,7 +13,6 @@ val fileSingle = words.map(x => {
 	(x(0), foo(x(3)))
 })
 val fileCluster = fileSingle.groupByKey
-fileCluster.foreach(println)
 val fileOutput = fileCluster.map(x => x._1 + "," + getMin(x._2).toString() + "B" + "," +
 																									 getMax(x._2).toString() + "B" + "," +
 																									 getMean(x._2).toString() + "B" + "," +
@@ -98,8 +97,6 @@ def getVariance(arg: Iterable[Long]): Long = {
 		sumSquare = sumSquare + (a - mean) * (a - mean)
 		size = size + 1
 	}
-	println(sumSquare)
-	println(size)
 	variance = sumSquare / size
 	return variance
 }
