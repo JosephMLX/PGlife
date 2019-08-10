@@ -1,0 +1,5 @@
+if result['ModifiedCount'] == 1:
+        reply = time + "booked successfully"
+    else:
+        reply = nameString " is busy at " + time + " please book another time."
+    return reply

@@ -1,0 +1,199 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server to get and update dentists' timeslot.",
+    "version": "1.0.0",
+    "title": "Timeslot"
+  },
+  "basePath": "/v2",
+  "tags": [
+    {
+      "name": "timeslot",
+      "description": "Dentist's timeslot"
+    }
+  ],
+  "paths": {
+    "/timeslots/{name}": {
+      "get": {
+        "tags": [
+          "timeslot"
+        ],
+        "summary": "Get timeslot of specific dentist",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Get dentist timeslot by dentist name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            }
+          },
+          "404": {
+            "description": "Dentist not found"
+          }
+        }
+      }
+    },
+    "/timeslots/book": {
+      "post": {
+        "tags": [
+          "timeslot"
+        ],
+        "summary": "Book a timeslot of a dentist",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Post body",
+            "required": true,
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Change"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          },
+          "400": {
+            "description": "failed operation"
+          },
+          "404": {
+            "description": "Dentist not found"
+          }
+        }
+      }
+    },
+    "/timeslots/cancle": {
+      "post": {
+        "tags": [
+          "timeslot"
+        ],
+        "summary": "Cancle a booked timeslot of a dentist",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Post body",
+            "required": true,
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Change"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          },
+          "400": {
+            "description": "failed operation"
+          },
+          "404": {
+            "description": "Dentist not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Timeslot": {
+      "type": "object",
+      "properties": {
+        "available09": {
+          "type": "boolean"
+        },
+        "available10": {
+          "type": "boolean"
+        },
+        "available11": {
+          "type": "boolean"
+        },
+        "available12": {
+          "type": "boolean"
+        },
+        "available13": {
+          "type": "boolean"
+        },
+        "available14": {
+          "type": "boolean"
+        },
+        "available15": {
+          "type": "boolean"
+        },
+        "available16": {
+          "type": "boolean"
+        },
+        "available17": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Change": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer"
+        }
+      }
+    },
+    "Feedback": {
+      "type": "object",
+      "properties": {
+        "ModifiedCount": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

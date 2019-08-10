@@ -1,0 +1,266 @@
+// Default message, lead user to talk to bot with defined sentences.
+
++ *
+- Welcome to use dentist booking chat bot, you can reply like these: \n
+^ 1. show me all dentists \n
+^ 2. show me information of <dentist's name> \n
+^ 3. show me available timeslots of <dentist's name> \n
+^ 4. show me if <dentist's name> is available at <time(11:00)> \n
+^ 5. reserve <dentist's name> at <time> \n
+^ 6. cancel my book for <dentist's name> at <time> \n
+
+// -------------------------------------------------------------------------------------------
+
+// The bot should be able to respond to basic greetings
+
++ hi
+- hi user! Welcome to our clinic!
+- hello, user! Let's talk and help you book your dentist!
+- ola, user! Speak something with me
+
++ (hi|hello|olla|hey|greetings) bot
+@ hi
++ (hey|hello|olla|greetings)
+@ hi
+
++ how are you
+- I'm good, how are you?
+- Good, mate
++ where are you from
+- I'm from my country
+
++ my name is * {weight=10}
+- nice to meet you, <star1>!
+- oh hey, <star1>!
+
++ i am (happy|excited|thrilled)
+- i am happy too for you
+
++ [*] (fuck|fucker|shit|damn|shut up|bitch) [*]
+- Does it make you feel strong to use that kind of language?
+- Are you venting your feelings now?
+- Are you angry?
+- Does this topic make you feel angry?
+- Is something making you feel angry?
+- Does using that kind of language make you feel better?
+
+// -------------------------------------------------------------------------------------------
+
+// The bot can list all the available doctors in the clinic and the client can choose
+
++ show me all dentists
+- <call>getAvailableDentists</call>
+
+// -------------------------------------------------------------------------------------------
+
+// The bot asks the client for the preferred doctor and provide information about the doctor
+
++ show me information of * *
+- <call>dentistInfo <star1> <star2></call>
+
+// -------------------------------------------------------------------------------------------
+
+// The bot can provide a list of available timeslots for the selected doctor
+
++ show me available timeslots of * *
+- <call>timeslotList <star1> <star2></call>
+
+// -------------------------------------------------------------------------------------------
+
+// The bot can check if the selected timeslot is already reserved and suggest another timeslot
+
++ show me if * * is available at *
+- <call>timeslotTime <star1> <star2> <star3></call>
+
+// -------------------------------------------------------------------------------------------
+
+// The bot can confirm the booking and summarize at the end.
+
+! var timeBook = 0
+! var firstNameBook = name
+! var lastNameBook = name
+
++ [*] reserve * * at * [*]
+- <set timeBook=<star3>><set firstNameBook=<star1>><set lastNameBook=<star2>>Are you sure to book this timeslot?{topic=book}
+
+> topic book
+
+  + yes
+  - <call>timeslotBook <get firstNameBook> <get lastNameBook> <get timeBook></call>{topic=random}
+
+  + no
+  - Fine.{topic=random}
+
+  + *
+  - Please confirm your booking (yes or no).
+
+< topic
+
+// -------------------------------------------------------------------------------------------
+
+// The bot can cancel the booking if the client requested it and ask for confirmation.
+
+! var timeCancel = 0
+! var firstNameCancel = name
+! var lastNameCancel = name
+
++ [*] reserve * * at * [*]
++ [*] cancel my book for * * at * [*]
+- <set timeCancel=<star3>><set firstNameCancel=<star1>><set lastNameCancel=<star2>>Are you sure to cancel your book at this timeslot?{topic=cancel}
+
+> topic cancel
+
+  + yes
+  - <call>timeslotCancel <get firstNameCancel> <get lastNameCancel> <get timeCancel></call>{topic=random}
+
+  + no
+  - Fine.{topic=random}
+
+  + *
+  - Please confirm your canceling (yes or no).
+
+< topic
+
+
+
+
+
+
+
+
+// python objects
+
+
+// The object name is "getAvailableDentists", written in Python
+> object getAvailableDentists python
+    import requests
+    import json
+    r = requests.get('http://0.0.0.0:5050/v2/dentists/')
+    j = json.loads(r.text)
+    d = j['dentists']
+    s = "We have these professional dentists in our clinic:\n" + '\n'.join(d)
+    return s
+< object
+
+> object dentistInfo python
+    import requests
+    import json
+    firstName, lastName = args
+    firstName = firstName[0].upper() + firstName[1:]
+    lastName = lastName[0].upper() + lastName[1:]
+    nameURL = firstName + "%20" + lastName
+    nameString = ' '.join([firstName, lastName])
+    r = requests.get('http://0.0.0.0:5050/v2/dentists/' + nameURL)
+    if r.status_code != 200:
+        reply = "Seems like " + nameString + " doesn't work in our clinic... What about let me show you all our available dentists?"
+        return reply
+    j = json.loads(r.text)
+    reply = nameString + " works at " + j['location'] + "." + " Phone number is " + j['phone'] + ", specification is " + j['specification']
+    return reply
+< object
+
+
+> object timeslotList python
+    import requests
+    import json
+    firstName, lastName = args
+    firstName = firstName[0].upper() + firstName[1:]
+    lastName = lastName[0].upper() + lastName[1:]
+    nameURL = firstName + "%20" + lastName
+    nameString = ' '.join([firstName, lastName])
+    r = requests.get('http://0.0.0.0:5060/v2/timeslots/' + nameURL)
+    if r.status_code != 200:
+        reply = "Seems like " + nameString + "doesn't work in our clinic... What about let me show you all our available dentists?"
+        return reply
+    j = json.loads(r.text)
+    d = {True: 'free', False: 'busy'}
+    reply = nameString + "'s timeslot is      :"
+    reply += "09:00-10:00: " + d[j['available09']]
+    reply += ";10:00-11:00: " + d[j['available10']]
+    reply += ";11:00-12:00: " + d[j['available11']]
+    reply += ";12:00-13:00: " + d[j['available12']]
+    reply += ";13:00-14:00: " + d[j['available13']]
+    reply += ";14:00-15:00: " + d[j['available14']]
+    reply += ";15:00-16:00: " + d[j['available15']]
+    reply += ";16:00-17:00: " + d[j['available16']]
+    return reply
+< object
+
+
+> object timeslotTime python
+    import requests
+    import json
+    firstName, lastName, time = args
+    firstName = firstName[0].upper() + firstName[1:]
+    lastName = lastName[0].upper() + lastName[1:]
+    nameURL = firstName + "%20" + lastName
+    nameString = ' '.join([firstName, lastName])
+    r = requests.get('http://0.0.0.0:5060/v2/timeslots/' + nameURL)
+    askTime = int(time[:2])
+    checkTime = "available" + time[:2]
+    if r.status_code != 200:
+        reply = "Seems like " + nameString + "doesn't work in our clinic... What about let me show you all our available dentists?"
+        return reply
+    if askTime > 16 or askTime < 9:
+        return "Sorry, our clinic is closed at that time"
+    j = json.loads(r.text)
+
+    times = []
+    for i in range(9, 17):
+        s = "available" + "%02d" % i
+        times.append(s)
+
+    available = []
+    for time in times:
+        if j[time] == True:
+            available.append(time)
+    if checkTime in available:
+        reply = nameString + " is available at " + checkTime[-2:] + ":00"
+    else:
+        if len(available) == 0:
+            reply = "Sorry, the dentist is busy in all timeslots today."
+        else:
+            reply = "Sorry, the dentist is busy at this timeslot."
+            reply += " You can book dentist's time at " + available[0][-2:] + ":00. Sounds good for you?"
+    return reply
+< object
+
+> object timeslotBook python
+    import requests
+    import json
+    firstName, lastName, time = args
+    firstName = firstName[0].upper() + firstName[1:]
+    lastName = lastName[0].upper() + lastName[1:]
+    nameString = ' '.join([firstName, lastName])
+    bookTime = int(time[:2])
+    if bookTime > 16 or bookTime < 9:
+        return "Sorry, our clinic is closed at that time"
+    body = [{'name': nameString, 'time': bookTime}]
+    r = requests.post('http://0.0.0.0:5060/v2/timeslots/book', json=body)
+    result = json.loads(r.text)
+    if result['ModifiedCount'] == 1:
+        reply = "You have booked successfully"
+    else:
+        reply = nameString + " is busy at this timeslot, please book another time."
+    return reply
+< object
+
+> object timeslotCancel python
+    import requests
+    import json
+    firstName, lastName, time = args
+    firstName = firstName[0].upper() + firstName[1:]
+    lastName = lastName[0].upper() + lastName[1:]
+    nameString = ' '.join([firstName, lastName])
+    cancelTime = int(time[:2])
+    if cancelTime > 16 or cancelTime < 9:
+        return "Sorry, our clinic is closed at that time"
+    body = [{'name': nameString, 'time': cancelTime}]
+    r = requests.post('http://0.0.0.0:5060/v2/timeslots/cancle', json=body)
+    result = json.loads(r.text)
+    if result['ModifiedCount'] == 1:
+        reply = "You have canceled successfully"
+    else:
+        reply = nameString + " doesn't have a book at this timeslot, please check again."
+    return reply
+< object

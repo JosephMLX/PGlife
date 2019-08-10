@@ -1,0 +1,126 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server to get dentist information.",
+    "version": "1.0.0",
+    "title": "Dentist"
+  },
+  "basePath": "/v2",
+  "tags": [
+    {
+      "name": "dentist",
+      "description": "Dentist information"
+    }
+  ],
+  "paths": {
+    "/dentists/": {
+      "get": {
+        "tags": [
+          "dentist"
+        ],
+        "summary": "Get all available dentists",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AvailableDentists"
+            }
+          }
+        }
+      }
+    },
+    "/dentists/{name}": {
+      "get": {
+        "tags": [
+          "dentist"
+        ],
+        "summary": "Check a dentist's information",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Get dentist information by dentist name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Dentist"
+            }
+          },
+          "404": {
+            "description": "Dentist not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Dentist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "description": "Dentist's name"
+        },
+        "location": {
+          "type": "string",
+          "description": "Dentist's office location"
+        },
+        "specification": {
+          "type": "string",
+          "description": "Dentist's specification"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Dentist's phone number"
+        },
+        "description": {
+          "type": "string",
+          "description": "Introduction of dentist"
+        }
+      }
+    },
+    "AvailableDentists": {
+      "type": "object",
+      "properties": {
+        "dentists": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Dentist's name"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
