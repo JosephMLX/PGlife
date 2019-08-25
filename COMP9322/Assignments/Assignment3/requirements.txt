@@ -1,0 +1,4 @@
+flask 
+rivescript
+requests
+json
